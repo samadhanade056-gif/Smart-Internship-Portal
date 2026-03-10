@@ -76,11 +76,13 @@ router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
     const recommendations = generateRecommendations(extractedSkills.allSkills);
 
     // ── SAVE TO SUPABASE ──────────────────────────────
+    // IMPORTANT: If your upload fails, run this in Supabase SQL Editor:
+    // ALTER TABLE users ADD COLUMN resume_text TEXT DEFAULT '';
     const { error: updateError } = await supabase.from('users').update({
       skills: extractedSkills.allSkills,
       ats_score: atsResult.total_score,
       ats_breakdown: atsResult.breakdown,
-      // resume_text: resumeText.slice(0, 5000), // Column missing in DB
+      // resume_text: resumeText.slice(0, 5000), // Uncomment after running the SQL command above!
       updated_at: new Date().toISOString()
     }).eq('id', req.user.id);
 
