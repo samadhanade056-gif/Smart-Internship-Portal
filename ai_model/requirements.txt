@@ -1,0 +1,34 @@
+# ══════════════════════════════════════════════════════════════════
+#  Smart Internship Portal — Advanced NLP Dependencies
+#  Install: pip install -r requirements.txt
+#  Then  : python -m spacy download en_core_web_lg
+# ══════════════════════════════════════════════════════════════════
+
+# ── PDF / DOCX Parsing ─────────────────────────────────────────────
+pdfplumber==0.10.3          # PDF text extraction with layout awareness
+python-docx==1.1.0          # DOCX/Word document parsing
+
+# ── NLP Core ──────────────────────────────────────────────────────
+spacy==3.7.4                # NLP engine: NER, POS, lemmatization
+# After install run:
+#   python -m spacy download en_core_web_lg   (recommended)
+#   python -m spacy download en_core_web_sm   (lightweight fallback)
+
+# ── Fuzzy Matching ─────────────────────────────────────────────────
+rapidfuzz==3.8.1            # Fast fuzzy string matching (typo handling)
+
+# ── ML / TF-IDF ───────────────────────────────────────────────────
+scikit-learn==1.4.2         # TF-IDF vectorizer, cosine similarity
+numpy==1.26.4               # Numerical operations
+pandas==2.2.1               # Data manipulation
+
+# ── Semantic Matching (Sentence-BERT) ─────────────────────────────
+sentence-transformers==2.7.0  # all-MiniLM-L6-v2 for semantic skill matching
+torch==2.2.2                  # PyTorch backend for sentence-transformers
+
+# ── API Server (Flask bridge to Node.js backend) ──────────────────
+flask==3.0.3
+flask-cors==4.0.0
+
+# ── Utilities ─────────────────────────────────────────────────────
+python-dotenv==1.0.1        # Environment variable management

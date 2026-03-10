@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile — InternAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 20px;
+      align-items: start
+    }
+
+    .profile-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 28px;
+      text-align: center;
+      position: sticky;
+      top: 84px
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin: 0 auto 14px;
+      font-family: 'Inter', sans-serif
+    }
+
+    .p-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 3px
+    }
+
+    .p-email {
+      font-size: .8rem;
+      color: #8fa3c0;
+      margin-bottom: 14px
+    }
+
+    .p-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 18px
+    }
+
+    .p-badge {
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: .72rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, .1);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, .2)
+    }
+
+    .ats-ring-wrap {
+      margin-bottom: 16px
+    }
+
+    .ats-ring {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      margin: 0 auto 8px
+    }
+
+    .ats-ring svg {
+      transform: rotate(-90deg)
+    }
+
+    .ats-ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center
+    }
+
+    .ats-ring-center span:first-child {
+      font-size: 1.5rem;
+      font-weight: 900
+    }
+
+    .ats-ring-center span:last-child {
+      font-size: .6rem;
+      color: #8fa3c0
+    }
+
+    .p-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px
+    }
+
+    .ps {
+      background: var(--card2);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center
+    }
+
+    .ps-val {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #34d399
+    }
+
+    .ps-label {
+      font-size: .68rem;
+      color: #8fa3c0;
+      margin-top: 2px
+    }
+
+    .form-sec {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 24px;
+      margin-bottom: 16px
+    }
+
+    .form-sec h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 18px
+    }
+
+    .f-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px
+    }
+
+    .f-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px
+    }
+
+    .f-group.full {
+      grid-column: 1/-1
+    }
+
+    .f-label {
+      font-size: .75rem;
+      font-weight: 600;
+      color: #8fa3c0
+    }
+
+    .f-input {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: var(--rs);
+      padding: 10px 13px;
+      color: var(--text);
+      font-size: .875rem;
+      font-family: 'Inter', sans-serif;
+      transition: var(--tr);
+      outline: none;
+      width: 100%
+    }
+
+    .f-input:focus {
+      border-color: var(--primary)
+    }
+
+    .f-input:disabled {
+      opacity: .5
+    }
+
+    textarea.f-input {
+      resize: vertical;
+      min-height: 72px
+    }
+
+    .save-btn {
+      padding: 10px 24px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--rs);
+      font-size: .875rem;
+      font-weight: 600;
+      transition: var(--tr)
+    }
+
+    .save-btn:hover {
+      background: #059669
+    }
+
+    .save-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed
+    }
+
+    .skill-tag2 {
+      padding: 4px 11px;
+      border-radius: 5px;
+      font-size: .75rem;
+      font-weight: 500;
+      background: rgba(16, 185, 129, .1);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, .2)
+    }
+
+    .app-item {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 10px
+    }
+
+    .app-left {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .app-logo {
+      font-size: 1.4rem;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card);
+      border-radius: 8px
+    }
+
+    .app-title {
+      font-weight: 600;
+      font-size: .875rem
+    }
+
+    .app-co {
+      font-size: .78rem;
+      color: #8fa3c0;
+      margin-top: 2px
+    }
+
+    .status-badge {
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: .72rem;
+      font-weight: 700
+    }
+
+    .s-Applied {
+      background: rgba(99, 102, 241, .15);
+      color: #818cf8
+    }
+
+    .s-Interview {
+      background: rgba(245, 158, 11, .15);
+      color: #f59e0b
+    }
+
+    .s-Rejected {
+      background: rgba(239, 68, 68, .15);
+      color: #ef4444
+    }
+
+    .s-Accepted {
+      background: rgba(16, 185, 129, .15);
+      color: #34d399
+    }
+
+    @media(max-width:900px) {
+      .profile-grid {
+        grid-template-columns: 1fr
+      }
+
+      .f-grid {
+        grid-template-columns: 1fr
+      }
+
+      .profile-card {
+        position: static
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      <a href="../index.html" class="logo">Intern<span>AI</span></a>
+      <div class="nav-links" style="margin-left:auto">
+        <span style="font-size:.85rem;color:#8fa3c0">Hi, <strong id="userName"
+            style="color:#f0f4ff">Student</strong></span>
+        <button onclick="InternAI.logout()" class="btn-nav">Logout</button>
+      </div>
+    </div>
+  </nav>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Main</div>
+      <a class="sidebar-link" href="dashboard.html"><svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3" />
+          <rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3" />
+          <rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3" />
+          <rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3" />
+        </svg>Dashboard</a>
+      <a class="sidebar-link" href="internships.html"><svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+        </svg>All Internships</a>
+      <a class="sidebar-link active" href="profile.html"><svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.3" />
+          <path d="M2 14c0-3 2.7-5 6-5s6 2 6 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+        </svg>My Profile</a>
+    </div>
+  </aside>
+  <main class="dash-main">
+    <div class="dash-header">
+      <h1>My Profile</h1>
+      <p>Your information, skills, and applications — all saved in database</p>
+    </div>
+    <div class="profile-grid">
+      <div>
+        <div class="profile-card">
+          <div class="avatar" id="profileAvatar">S</div>
+          <div class="p-name" id="profileName">Loading...</div>
+          <div class="p-email" id="profileEmail">—</div>
+          <div class="p-badges" id="profileBadges"></div>
+          <div class="ats-ring-wrap">
+            <div style="font-size:.72rem;color:#8fa3c0;margin-bottom:8px">ATS RESUME SCORE</div>
+            <div class="ats-ring">
+              <svg width="100" height="100" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="9" />
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#10b981" stroke-width="9" stroke-dasharray="264"
+                  stroke-dashoffset="264" stroke-linecap="round" id="atsCircle"
+                  style="transition:stroke-dashoffset 1.2s ease" />
+              </svg>
+              <div class="ats-ring-center"><span id="atsVal">—</span><span>out of 100</span></div>
+            </div>
+            <div id="atsGradeLabel" style="font-size:.78rem;color:#8fa3c0"></div>
+          </div>
+          <div class="p-stats">
+            <div class="ps">
+              <div class="ps-val" id="psSkills">0</div>
+              <div class="ps-label">Skills</div>
+            </div>
+            <div class="ps">
+              <div class="ps-val" id="psApplied">0</div>
+              <div class="ps-label">Applied</div>
+            </div>
+            <div class="ps">
+              <div class="ps-val" id="psCollege" style="font-size:.72rem;color:#f0f4ff">—</div>
+              <div class="ps-label">College</div>
+            </div>
+            <div class="ps">
+              <div class="ps-val" id="psBranch" style="font-size:.72rem;color:#f0f4ff">—</div>
+              <div class="ps-label">Branch</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <!-- Personal Info -->
+        <div class="form-sec">
+          <h2>👤 Personal Information</h2>
+          <div class="f-grid">
+            <div class="f-group"><label class="f-label">Full Name *</label><input class="f-input" id="iName" type="text"
+                placeholder="Your name" /></div>
+            <div class="f-group"><label class="f-label">Email (cannot change)</label><input class="f-input" id="iEmail"
+                type="email" disabled /></div>
+            <div class="f-group"><label class="f-label">Mobile Number</label><input class="f-input" id="iMobile"
+                type="tel" placeholder="+91 9876543210" /></div>
+            <div class="f-group"><label class="f-label">College / University</label><input class="f-input" id="iCollege"
+                type="text" placeholder="MIT College of Engineering" /></div>
+            <div class="f-group"><label class="f-label">Branch / Degree</label><input class="f-input" id="iBranch"
+                type="text" placeholder="B.Tech Computer Engineering" /></div>
+            <div class="f-group"><label class="f-label">LinkedIn <span
+                  style="color:#4a5d78">(optional)</span></label><input class="f-input" id="iLinkedin" type="url"
+                placeholder="https://linkedin.com/in/yourname" /></div>
+            <div class="f-group"><label class="f-label">GitHub <span
+                  style="color:#4a5d78">(optional)</span></label><input class="f-input" id="iGithub" type="url"
+                placeholder="https://github.com/username" /></div>
+            <div class="f-group full"><label class="f-label">Bio</label><textarea class="f-input" id="iBio"
+                placeholder="Tell recruiters about yourself..."></textarea></div>
+          </div>
+          <div style="margin-top:16px;display:flex;gap:12px;align-items:center">
+            <button class="save-btn" id="saveBtn" onclick="saveProfile()">Save Profile</button>
+            <span id="saveMsg" style="font-size:.82rem;color:#10b981;display:none">✅ Saved!</span>
+          </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="form-sec">
+          <h2>🛠️ Skills from Resume</h2>
+          <div id="skillsContainer" style="display:flex;flex-wrap:wrap;gap:7px">
+            <p style="color:#8fa3c0;font-size:.85rem">Upload resume on Dashboard to see skills here.</p>
+          </div>
+        </div>
+
+        <!-- Security / Password -->
+        <div class="form-sec">
+          <h2>🔒 Update Password</h2>
+          <div class="f-grid">
+            <div class="f-group"><label class="f-label">Current Password</label><input class="f-input" id="currPwd"
+                type="password" placeholder="••••••••" /></div>
+            <div class="f-group"><label class="f-label">New Password</label><input class="f-input" id="newPwd"
+                type="password" placeholder="Min 8 characters" /></div>
+          </div>
+          <div style="margin-top:16px">
+            <button class="save-btn" id="pwdBtn" onclick="updatePassword()"
+              style="background:var(--card2);border:1px solid var(--border);color:var(--text)">Update Security</button>
+          </div>
+        </div>
+
+        <!-- Applied Companies -->
+        <div class="form-sec">
+          <h2>📋 Applied Companies</h2>
+          <div id="appliedContainer">
+            <div style="text-align:center;padding:32px;color:#8fa3c0">
+              <div style="font-size:2rem;margin-bottom:8px">📭</div>
+              <div>No applications yet.</div>
+              <a href="internships.html" style="color:#10b981;font-size:.82rem">Browse internships →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="../js/main.js"></script>
+  <script>
+    const API = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api';
+    if (!localStorage.getItem('intern_token')) window.location.href = 'login.html';
+
+    async function updatePassword() {
+      const btn = document.getElementById('pwdBtn');
+      const curr = document.getElementById('currPwd').value;
+      const next = document.getElementById('newPwd').value;
+      if (!curr || !next) return InternAI.showToast('Please fill all fields', 'error');
+      btn.disabled = true; btn.textContent = 'Updating...';
+      try {
+        const res = await fetch(API + '/auth/password', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('intern_token')}` },
+          body: JSON.stringify({ currentPassword: curr, newPassword: next })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        InternAI.showToast('Password updated! 🔒');
+        document.getElementById('currPwd').value = '';
+        document.getElementById('newPwd').value = '';
+      } catch (err) { InternAI.showToast(err.message, 'error'); }
+      finally { btn.disabled = false; btn.textContent = 'Update Security'; }
+    }
+
+    async function loadProfile() {
+      const token = localStorage.getItem('intern_token');
+      try {
+        const [meRes, appRes] = await Promise.all([
+          fetch(API + '/auth/me', { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(API + '/internships/applied/list', { headers: { Authorization: `Bearer ${token}` } })
+        ]);
+        const meData = await meRes.json();
+        const appData = await appRes.json();
+        const u = meData.user || {};
+        const apps = appData.applications || [];
+
+        // Avatar
+        const av = document.getElementById('profileAvatar');
+        av.textContent = u.name ? u.name[0].toUpperCase() : 'U';
+        av.style.background = u.avatar_color || '#10b981';
+        av.style.color = '#fff';
+
+        // Card info
+        document.getElementById('profileName').textContent = u.name || '—';
+        document.getElementById('profileEmail').textContent = u.email || '—';
+        document.getElementById('userName').textContent = u.name?.split(' ')[0] || 'Student';
+        document.getElementById('psCollege').textContent = u.college ? u.college.split(' ').slice(0, 2).join(' ') : '—';
+        document.getElementById('psBranch').textContent = u.branch ? u.branch.split(' ').slice(0, 2).join(' ') : '—';
+        document.getElementById('psSkills').textContent = (u.skills || []).length;
+        document.getElementById('psApplied').textContent = apps.length;
+
+        // ATS ring
+        const score = u.ats_score || 0;
+        document.getElementById('atsVal').textContent = score;
+        setTimeout(() => {
+          document.getElementById('atsCircle').style.strokeDashoffset = 264 - (score / 100) * 264;
+        }, 400);
+        const grade = score >= 85 ? 'A+' : score >= 75 ? 'A' : score >= 65 ? 'B' : score >= 50 ? 'C' : score >= 35 ? 'D' : 'F';
+        const gColor = score >= 65 ? '#10b981' : score >= 50 ? '#f59e0b' : '#ef4444';
+        document.getElementById('atsGradeLabel').innerHTML = `Grade <span style="color:${gColor};font-weight:700">${grade}</span> — ${score >= 75 ? 'Excellent!' : score >= 55 ? 'Good' : score >= 35 ? 'Needs work' : 'Improve resume'}`;
+
+        // Badges
+        const badges = document.getElementById('profileBadges');
+        badges.innerHTML = '';
+        if (u.linkedin) badges.innerHTML += `<a href="${u.linkedin}" target="_blank" class="p-badge">LinkedIn ↗</a>`;
+        if (u.github) badges.innerHTML += `<a href="${u.github}"   target="_blank" class="p-badge">GitHub ↗</a>`;
+        if (u.college) badges.innerHTML += `<span class="p-badge">${u.college.split(' ')[0]}</span>`;
+
+        // Form
+        document.getElementById('iName').value = u.name || '';
+        document.getElementById('iEmail').value = u.email || '';
+        document.getElementById('iMobile').value = u.mobile || '';
+        document.getElementById('iCollege').value = u.college || '';
+        document.getElementById('iBranch').value = u.branch || '';
+        document.getElementById('iLinkedin').value = u.linkedin || '';
+        document.getElementById('iGithub').value = u.github || '';
+        document.getElementById('iBio').value = u.bio || '';
+
+        // Skills
+        if ((u.skills || []).length > 0) {
+          document.getElementById('skillsContainer').innerHTML = u.skills.map(s => `<span class="skill-tag2">${s}</span>`).join('');
+        }
+
+        // Applications
+        if (apps.length > 0) {
+          document.getElementById('appliedContainer').innerHTML = apps.map(app => `
+          <div class="app-item">
+            <div class="app-left">
+              <div class="app-logo">${app.logo || app.internships?.logo || '🏢'}</div>
+              <div>
+                <div class="app-title">${app.title}</div>
+                <div class="app-co">${app.company} · Match: <span style="color:#34d399">${app.match_score}%</span> · ${new Date(app.applied_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+              </div>
+            </div>
+            <span class="status-badge s-${app.status}">${app.status}</span>
+          </div>`).join('');
+        }
+
+      } catch (err) { console.error('Profile load error:', err.message); }
+    }
+
+    async function saveProfile() {
+      const token = localStorage.getItem('intern_token');
+      const btn = document.getElementById('saveBtn');
+      const msg = document.getElementById('saveMsg');
+      btn.disabled = true; btn.textContent = 'Saving...';
+      try {
+        const res = await fetch(API + '/auth/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({
+            name: document.getElementById('iName').value,
+            college: document.getElementById('iCollege').value,
+            branch: document.getElementById('iBranch').value,
+            mobile: document.getElementById('iMobile').value,
+            linkedin: document.getElementById('iLinkedin').value,
+            github: document.getElementById('iGithub').value,
+            bio: document.getElementById('iBio').value
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        // Update display
+        document.getElementById('profileName').textContent = document.getElementById('iName').value;
+        document.getElementById('userName').textContent = document.getElementById('iName').value.split(' ')[0];
+        const li = document.getElementById('iLinkedin').value, gh = document.getElementById('iGithub').value;
+        const badges = document.getElementById('profileBadges'); badges.innerHTML = '';
+        if (li) badges.innerHTML += `<a href="${li}" target="_blank" class="p-badge">LinkedIn ↗</a>`;
+        if (gh) badges.innerHTML += `<a href="${gh}" target="_blank" class="p-badge">GitHub ↗</a>`;
+        msg.style.display = 'inline'; setTimeout(() => msg.style.display = 'none', 3000);
+        InternAI.showToast('Profile saved to database! ✅');
+      } catch (err) { InternAI.showToast(err.message, 'error'); }
+      finally { btn.disabled = false; btn.textContent = 'Save Profile'; }
+    }
+
+    loadProfile();
+  </script>
+</body>
+
+</html>
