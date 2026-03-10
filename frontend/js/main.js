@@ -33,9 +33,29 @@ async function apiFetch(path, opts = {}) {
   return data;
 }
 
-// Hamburger
+// Hamburger & Mobile Nav
 const hamburger = document.getElementById('hamburger');
-if (hamburger) hamburger.addEventListener('click', () => { const sb = document.getElementById('sidebar'); if (sb) sb.classList.toggle('open'); });
+if (hamburger) {
+  hamburger.addEventListener('click', () => {
+    const sb = document.getElementById('sidebar');
+    if (sb) {
+      const isOpen = sb.classList.toggle('open');
+      document.body.style.overflow = (isOpen && window.innerWidth <= 1024) ? 'hidden' : '';
+    }
+  });
+}
+
+// Close sidebar on link click (mobile)
+document.addEventListener('click', e => {
+  const sb = document.getElementById('sidebar');
+  if (sb && sb.classList.contains('open') && window.innerWidth <= 1024) {
+    if (e.target.closest('.sidebar-link')) {
+      sb.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+});
+
 
 function requireAuth() { if (!getToken()) { window.location.href = '/pages/login.html'; return false; } return true; }
 

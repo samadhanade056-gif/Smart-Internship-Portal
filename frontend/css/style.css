@@ -1008,44 +1008,163 @@ button {
 }
 
 /* ── RESPONSIVE ── */
-@media(max-width:1024px) {
+
+/* Laptop & Desktop (Default) */
+@media (min-width: 1441px) {
+
+  .nav-inner,
+  .dash-main {
+    max-width: 1400px;
+  }
+}
+
+/* Tablet & Smaller Laptops (up to 1200px) */
+@media (max-width: 1200px) {
+  :root {
+    --sidebar-w: 200px;
+  }
+
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablets (up to 1024px) */
+@media (max-width: 1024px) {
   .sidebar {
     transform: translateX(-100%);
-    transition: transform .3s
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
   }
 
   .sidebar.open {
-    transform: translateX(0)
+    transform: translateX(0);
   }
 
   .dash-main {
     margin-left: 0;
-    padding: 20px
+    padding: 24px 20px;
+    width: 100%;
   }
 
   .hamburger {
-    display: flex
-  }
-
-  .stats-row {
-    grid-template-columns: repeat(2, 1fr)
+    display: flex;
   }
 
   .internships-grid {
-    grid-template-columns: 1fr
-  }
-}
-
-@media(max-width:600px) {
-  .stats-row {
-    grid-template-columns: 1fr 1fr
+    grid-template-columns: 1fr;
   }
 
   .filter-bar {
-    flex-direction: column
+    gap: 8px;
+  }
+}
+
+/* Large Mobile (up to 768px) */
+@media (max-width: 768px) {
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-card-val {
+    font-size: 1.5rem;
+  }
+
+  .dash-header h1 {
+    font-size: 1.4rem;
+  }
+}
+
+/* Mobile Devices (up to 600px) */
+@media (max-width: 600px) {
+  :root {
+    --nav-h: 56px;
+  }
+
+  .nav-inner {
+    padding: 0 16px;
+  }
+
+  .dash-main {
+    padding: 16px;
+  }
+
+  .stats-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input-wrap {
+    width: 100%;
   }
 
   .form-row {
-    grid-template-columns: 1fr
+    grid-template-columns: 1fr;
+  }
+
+  .btn-nav span {
+    display: none;
+    /* Hide text on small nav buttons if needed */
+  }
+
+  .logo {
+    font-size: 1.15rem;
+  }
+
+  .dash-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .dash-header p {
+    font-size: 0.8rem;
+  }
+
+  .upload-zone {
+    padding: 32px 16px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .tab {
+    font-size: 0.72rem;
+    padding: 8px 4px;
+    white-space: nowrap;
+  }
+
+  .tabs {
+    overflow-x: auto;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal-box {
+    padding: 24px 16px;
+    width: calc(100% - 10px);
+    margin: 5px;
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 400px) {
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+
+  .intern-card-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .btn-apply {
+    width: 100%;
   }
 }

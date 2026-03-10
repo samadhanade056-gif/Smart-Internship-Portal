@@ -1,123 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Internships — InternAI</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
 </head>
+
 <body>
-<nav class="nav">
-  <div class="nav-inner">
-    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
-    <a href="../index.html" class="logo">Intern<span>AI</span></a>
-    <div class="nav-links" style="margin-left:auto">
-      <a href="dashboard.html" class="btn-nav">Dashboard</a>
-      <a href="profile.html" class="btn-nav">Profile</a>
-      <button onclick="InternAI.logout()" class="btn-nav">Logout</button>
+  <nav class="nav">
+    <div class="nav-inner">
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      <a href="../index.html" class="logo">Intern<span>AI</span></a>
+      <div class="nav-links" style="margin-left:auto">
+        <a href="dashboard.html" class="btn-nav">Dashboard</a>
+        <a href="profile.html" class="btn-nav">Profile</a>
+        <button onclick="InternAI.logout()" class="btn-nav">Logout</button>
+      </div>
+    </div>
+  </nav>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Main</div>
+      <a class="sidebar-link" href="dashboard.html"><svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3" />
+          <rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3" />
+          <rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3" />
+          <rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3" />
+        </svg>Dashboard</a>
+      <a class="sidebar-link active" href="internships.html"><svg width="16" height="16" viewBox="0 0 16 16"
+          fill="none">
+          <path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+        </svg>All Internships</a>
+      <a class="sidebar-link" href="profile.html"><svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.3" />
+          <path d="M2 14c0-3 2.7-5 6-5s6 2 6 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+        </svg>My Profile</a>
+    </div>
+  </aside>
+  <main class="dash-main">
+    <div class="dash-header">
+      <h1>All Internships</h1>
+      <p>30 real companies · Upload resume for match scores</p>
+    </div>
+    <div class="filter-bar">
+      <div class="search-input-wrap"><svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M6 11A5 5 0 106 1a5 5 0 000 10zM13 13l-3-3" stroke="currentColor" stroke-width="1.3"
+            stroke-linecap="round" />
+        </svg><input class="search-input" type="text" id="searchInput" placeholder="Search company or role..."
+          oninput="applyFilters()" /></div>
+      <select class="filter-select" id="domainFilter" onchange="applyFilters()">
+        <option value="">All Domains</option>
+        <option value="web_backend">Backend</option>
+        <option value="web_frontend">Frontend</option>
+        <option value="ai_ml">AI / ML</option>
+        <option value="cloud_devops">DevOps / Cloud</option>
+        <option value="mobile">Mobile</option>
+        <option value="cybersecurity">Cybersecurity</option>
+        <option value="design">Design</option>
+        <option value="tools_other">Other</option>
+      </select>
+      <select class="filter-select" id="locationFilter" onchange="applyFilters()">
+        <option value="">All Locations</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Noida">Noida</option>
+        <option value="Gurgaon">Gurgaon</option>
+        <option value="Pune">Pune</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Remote">Remote</option>
+      </select>
+      <select class="filter-select" id="durationFilter" onchange="applyFilters()">
+        <option value="">Any Duration</option>
+        <option value="3">3 months</option>
+        <option value="6">6 months</option>
+      </select>
+      <button class="btn-nav" onclick="clearFilters()">Clear ✕</button>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="font-size:.875rem;color:#8fa3c0"><span id="resultCount">0</span> internships found</div>
+    </div>
+    <div class="internships-grid" id="allInternshipsGrid"></div>
+  </main>
+
+  <div id="modal" class="modal-overlay" onclick="if(event.target===this)InternAI.closeModal()">
+    <div class="modal-box"><button class="modal-close" onclick="InternAI.closeModal()">✕</button>
+      <div id="modalContent"></div>
     </div>
   </div>
-</nav>
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-section">
-    <div class="sidebar-label">Main</div>
-    <a class="sidebar-link" href="dashboard.html"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>Dashboard</a>
-    <a class="sidebar-link active" href="internships.html"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>All Internships</a>
-    <a class="sidebar-link" href="profile.html"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>My Profile</a>
-  </div>
-</aside>
-<main class="dash-main">
-  <div class="dash-header"><h1>All Internships</h1><p>30 real companies · Upload resume for match scores</p></div>
-  <div class="filter-bar">
-    <div class="search-input-wrap"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M6 11A5 5 0 106 1a5 5 0 000 10zM13 13l-3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><input class="search-input" type="text" id="searchInput" placeholder="Search company or role..." oninput="applyFilters()"/></div>
-    <select class="filter-select" id="domainFilter" onchange="applyFilters()">
-      <option value="">All Domains</option>
-      <option value="web_backend">Backend</option>
-      <option value="web_frontend">Frontend</option>
-      <option value="ai_ml">AI / ML</option>
-      <option value="cloud_devops">DevOps / Cloud</option>
-      <option value="mobile">Mobile</option>
-      <option value="cybersecurity">Cybersecurity</option>
-      <option value="design">Design</option>
-      <option value="tools_other">Other</option>
-    </select>
-    <select class="filter-select" id="locationFilter" onchange="applyFilters()">
-      <option value="">All Locations</option>
-      <option value="Bangalore">Bangalore</option>
-      <option value="Mumbai">Mumbai</option>
-      <option value="Hyderabad">Hyderabad</option>
-      <option value="Noida">Noida</option>
-      <option value="Gurgaon">Gurgaon</option>
-      <option value="Pune">Pune</option>
-      <option value="Chennai">Chennai</option>
-      <option value="Remote">Remote</option>
-    </select>
-    <select class="filter-select" id="durationFilter" onchange="applyFilters()">
-      <option value="">Any Duration</option>
-      <option value="3">3 months</option>
-      <option value="6">6 months</option>
-    </select>
-    <button class="btn-nav" onclick="clearFilters()">Clear ✕</button>
-  </div>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-    <div style="font-size:.875rem;color:#8fa3c0"><span id="resultCount">0</span> internships found</div>
-  </div>
-  <div class="internships-grid" id="allInternshipsGrid" style="grid-template-columns:repeat(2,1fr)"></div>
-</main>
 
-<div id="modal" class="modal-overlay" onclick="if(event.target===this)InternAI.closeModal()">
-  <div class="modal-box"><button class="modal-close" onclick="InternAI.closeModal()">✕</button><div id="modalContent"></div></div>
-</div>
+  <script src="../js/main.js"></script>
+  <script>
+    if (!localStorage.getItem('intern_token')) window.location.href = 'login.html';
+    let allInternships = [];
 
-<script src="../js/main.js"></script>
-<script>
-  if (!localStorage.getItem('intern_token')) window.location.href = 'login.html';
-  let allInternships = [];
+    async function loadAll() {
+      const grid = document.getElementById('allInternshipsGrid');
+      grid.innerHTML = '<div class="spinner" style="margin:60px auto"></div>';
+      try {
+        const API = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api';
+        const res = await fetch(API + '/internships', { headers: { Authorization: `Bearer ${localStorage.getItem('intern_token')}` } });
+        const data = await res.json();
+        allInternships = data.internships || [];
+        renderGrid(allInternships);
+      } catch (err) { grid.innerHTML = `<p style="color:#ef4444;text-align:center;padding:60px">${err.message}</p>`; }
+    }
 
-  async function loadAll() {
-    const grid = document.getElementById('allInternshipsGrid');
-    grid.innerHTML = '<div class="spinner" style="margin:60px auto"></div>';
-    try {
-      const API = window.location.hostname==='localhost' ? 'http://localhost:5000/api' : '/api';
-      const res = await fetch(API+'/internships', {headers:{Authorization:`Bearer ${localStorage.getItem('intern_token')}`}});
-      const data = await res.json();
-      allInternships = data.internships || [];
+    function renderGrid(items) {
+      const grid = document.getElementById('allInternshipsGrid');
+      document.getElementById('resultCount').textContent = items.length;
+      grid.innerHTML = items.length ? items.map(r => InternAI.renderInternCard(r)).join('') : '<p style="color:#8fa3c0;text-align:center;padding:60px;grid-column:span 2">No internships match your filters.</p>';
+    }
+
+    function applyFilters() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const domain = document.getElementById('domainFilter').value;
+      const location = document.getElementById('locationFilter').value;
+      const duration = document.getElementById('durationFilter').value;
+      let filtered = allInternships.filter(i => {
+        const ms = !search || i.title.toLowerCase().includes(search) || i.company.toLowerCase().includes(search) || (i.required_skills || []).join(' ').includes(search);
+        const md = !domain || i.domain === domain;
+        const ml = !location || i.location.toLowerCase().includes(location.toLowerCase());
+        const mdu = !duration || i.duration.startsWith(duration);
+        return ms && md && ml && mdu;
+      });
+      renderGrid(filtered);
+    }
+
+    function clearFilters() {
+      ['searchInput', 'domainFilter', 'locationFilter', 'durationFilter'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
       renderGrid(allInternships);
-    } catch(err) { grid.innerHTML=`<p style="color:#ef4444;text-align:center;padding:60px">${err.message}</p>`; }
-  }
+    }
 
-  function renderGrid(items) {
-    const grid = document.getElementById('allInternshipsGrid');
-    document.getElementById('resultCount').textContent = items.length;
-    grid.innerHTML = items.length ? items.map(r => InternAI.renderInternCard(r)).join('') : '<p style="color:#8fa3c0;text-align:center;padding:60px;grid-column:span 2">No internships match your filters.</p>';
-  }
+    function openModal(r) { InternAI.openModal(r); }
+    function applyNow(id, score) { InternAI.applyNow(id, score); }
+    function closeModal() { InternAI.closeModal(); }
 
-  function applyFilters() {
-    const search = document.getElementById('searchInput').value.toLowerCase();
-    const domain = document.getElementById('domainFilter').value;
-    const location = document.getElementById('locationFilter').value;
-    const duration = document.getElementById('durationFilter').value;
-    let filtered = allInternships.filter(i => {
-      const ms = !search || i.title.toLowerCase().includes(search) || i.company.toLowerCase().includes(search) || (i.required_skills||[]).join(' ').includes(search);
-      const md = !domain || i.domain === domain;
-      const ml = !location || i.location.toLowerCase().includes(location.toLowerCase());
-      const mdu = !duration || i.duration.startsWith(duration);
-      return ms && md && ml && mdu;
-    });
-    renderGrid(filtered);
-  }
-
-  function clearFilters() {
-    ['searchInput','domainFilter','locationFilter','durationFilter'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
-    renderGrid(allInternships);
-  }
-
-  function openModal(r) { InternAI.openModal(r); }
-  function applyNow(id, score) { InternAI.applyNow(id, score); }
-  function closeModal() { InternAI.closeModal(); }
-
-  loadAll();
-</script>
+    loadAll();
+  </script>
 </body>
+
 </html>
