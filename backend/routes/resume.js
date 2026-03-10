@@ -80,7 +80,7 @@ router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
       skills: extractedSkills.allSkills,
       ats_score: atsResult.total_score,
       ats_breakdown: atsResult.breakdown,
-      resume_text: resumeText.slice(0, 5000),
+      // resume_text: resumeText.slice(0, 5000), // Column missing in DB
       updated_at: new Date().toISOString()
     }).eq('id', req.user.id);
 
