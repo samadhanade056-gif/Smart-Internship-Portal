@@ -82,13 +82,15 @@ button {
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px
 }
 
 .logo {
   font-size: 1.35rem;
   font-weight: 800;
-  letter-spacing: -.03em
+  letter-spacing: -.03em;
+  flex-shrink: 0;
 }
 
 .logo span {
@@ -102,8 +104,14 @@ button {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: auto
 }
+
+@media (max-width: 1024px) {
+  .nav-links:not(.mobile-show) {
+    display: none;
+  }
+}
+
 
 .btn-nav {
   padding: 7px 18px;
@@ -838,10 +846,10 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 40px 20px;
   background: var(--bg);
   position: relative;
-  overflow: hidden
+  overflow-x: hidden
 }
 
 .auth-bg {
@@ -1147,10 +1155,23 @@ button {
 
   .modal-box {
     padding: 24px 16px;
-    width: calc(100% - 10px);
-    margin: 5px;
+    width: calc(100% - 16px);
+    margin: 8px;
+    border-radius: 16px;
+  }
+
+  .section-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .sidebar {
+    background: rgba(10, 15, 30, 0.95);
+    backdrop-filter: blur(12px);
   }
 }
+
 
 /* Extra Small Devices */
 @media (max-width: 400px) {

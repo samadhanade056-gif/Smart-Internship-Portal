@@ -1,212 +1,934 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>InternAI — Find Your Dream Internship</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
   <style>
-    body{font-family:'Inter',sans-serif}
-    .hero{min-height:100vh;display:flex;align-items:center;padding-top:64px;position:relative;overflow:hidden}
-    .hero-bg{position:absolute;inset:0;z-index:0}
-    .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.15}
-    .orb1{width:600px;height:600px;background:radial-gradient(circle,#10b981,transparent);top:-150px;right:-100px}
-    .orb2{width:400px;height:400px;background:radial-gradient(circle,#6366f1,transparent);bottom:0;left:-50px}
-    .orb3{width:250px;height:250px;background:radial-gradient(circle,#8b5cf6,transparent);top:50%;left:45%}
-    .grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(16,185,129,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(16,185,129,.03) 1px,transparent 1px);background-size:60px 60px}
-    .hero-inner{max-width:1200px;margin:0 auto;padding:60px 24px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:1;width:100%}
-    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:20px;font-size:.78rem;font-weight:600;color:#34d399;margin-bottom:20px}
-    .badge-dot{width:6px;height:6px;border-radius:50%;background:#10b981;animation:pulse 2s infinite}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-    h1.hero-title{font-size:clamp(2.4rem,5vw,3.6rem);font-weight:900;line-height:1.06;letter-spacing:-.04em;margin-bottom:18px}
-    .grad{background:linear-gradient(135deg,#10b981,#34d399,#6ee7b7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .hero-sub{font-size:1rem;color:#8fa3c0;line-height:1.7;margin-bottom:32px;max-width:480px}
-    .hero-cta{display:flex;gap:12px;flex-wrap:wrap}
-    .btn-hero{padding:13px 28px;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-family:'Inter',sans-serif}
-    .btn-hero-p{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;box-shadow:0 8px 28px rgba(16,185,129,.25)}
-    .btn-hero-p:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(16,185,129,.35)}
-    .btn-hero-g{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#f0f4ff}
-    .btn-hero-g:hover{border-color:#10b981;background:rgba(16,185,129,.06)}
-    .hero-stats{display:flex;gap:28px;margin-top:44px;padding-top:28px;border-top:1px solid rgba(255,255,255,.07)}
-    .hs-val{font-size:1.8rem;font-weight:900;color:#34d399;letter-spacing:-.03em}
-    .hs-label{font-size:.72rem;color:#4a5d78;margin-top:2px}
+    body {
+      font-family: 'Inter', sans-serif
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 64px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: .15
+    }
+
+    .orb1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, #10b981, transparent);
+      top: -150px;
+      right: -100px
+    }
+
+    .orb2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, #6366f1, transparent);
+      bottom: 0;
+      left: -50px
+    }
+
+    .orb3 {
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, #8b5cf6, transparent);
+      top: 50%;
+      left: 45%
+    }
+
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(16, 185, 129, .03) 1px, transparent 1px), linear-gradient(90deg, rgba(16, 185, 129, .03) 1px, transparent 1px);
+      background-size: 60px 60px
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+      width: 100%
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(16, 185, 129, .1);
+      border: 1px solid rgba(16, 185, 129, .2);
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 600;
+      color: #34d399;
+      margin-bottom: 20px
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulse 2s infinite
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .3
+      }
+    }
+
+    h1.hero-title {
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 900;
+      line-height: 1.06;
+      letter-spacing: -.04em;
+      margin-bottom: 18px
+    }
+
+    .grad {
+      background: linear-gradient(135deg, #10b981, #34d399, #6ee7b7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: #8fa3c0;
+      line-height: 1.7;
+      margin-bottom: 32px;
+      max-width: 480px
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap
+    }
+
+    .btn-hero {
+      padding: 13px 28px;
+      border-radius: 10px;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-family: 'Inter', sans-serif
+    }
+
+    .btn-hero-p {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border: none;
+      box-shadow: 0 8px 28px rgba(16, 185, 129, .25)
+    }
+
+    .btn-hero-p:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba(16, 185, 129, .35)
+    }
+
+    .btn-hero-g {
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .1);
+      color: #f0f4ff
+    }
+
+    .btn-hero-g:hover {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, .06)
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 28px;
+      margin-top: 44px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255, 255, 255, .07)
+    }
+
+    .hs-val {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #34d399;
+      letter-spacing: -.03em
+    }
+
+    .hs-label {
+      font-size: .72rem;
+      color: #4a5d78;
+      margin-top: 2px
+    }
+
     /* MOCK UI */
-    .hero-visual{position:relative;padding:10px}
-    .mock-card{background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;margin-bottom:10px;transition:.25s}
-    .mock-card:hover{border-color:rgba(16,185,129,.25);transform:translateX(-3px)}
-    .mc-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-    .mc-logo{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,#10b981,#6366f1);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-    .mc-co{font-weight:700;font-size:.88rem}
-    .mc-role{font-size:.74rem;color:#8fa3c0}
-    .mc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
-    .mc-tag{padding:2px 9px;border-radius:12px;font-size:.68rem;font-weight:500;background:rgba(16,185,129,.1);color:#34d399}
-    .mc-foot{display:flex;align-items:center;justify-content:space-between}
-    .mc-stip{font-size:.82rem;font-weight:700;color:#34d399}
-    .mc-match{display:flex;align-items:center;gap:5px;font-size:.74rem;color:#8fa3c0}
-    .mc-bar{width:55px;height:4px;background:#1a2337;border-radius:2px;overflow:hidden}
-    .mc-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#10b981,#34d399)}
-    .float-b{position:absolute;background:#1a2337;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 13px;font-size:.74rem;font-weight:600;display:flex;align-items:center;gap:6px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
-    .fb1{top:-16px;right:-10px;color:#34d399} .fb2{bottom:30px;left:-20px;color:#f59e0b} .fb3{top:45%;right:-30px;color:#6366f1}
+    .hero-visual {
+      position: relative;
+      padding: 10px
+    }
+
+    .mock-card {
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, .07);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 10px;
+      transition: .25s
+    }
+
+    .mock-card:hover {
+      border-color: rgba(16, 185, 129, .25);
+      transform: translateX(-3px)
+    }
+
+    .mc-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px
+    }
+
+    .mc-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #10b981, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0
+    }
+
+    .mc-co {
+      font-weight: 700;
+      font-size: .88rem
+    }
+
+    .mc-role {
+      font-size: .74rem;
+      color: #8fa3c0
+    }
+
+    .mc-tags {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-bottom: 10px
+    }
+
+    .mc-tag {
+      padding: 2px 9px;
+      border-radius: 12px;
+      font-size: .68rem;
+      font-weight: 500;
+      background: rgba(16, 185, 129, .1);
+      color: #34d399
+    }
+
+    .mc-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .mc-stip {
+      font-size: .82rem;
+      font-weight: 700;
+      color: #34d399
+    }
+
+    .mc-match {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: .74rem;
+      color: #8fa3c0
+    }
+
+    .mc-bar {
+      width: 55px;
+      height: 4px;
+      background: #1a2337;
+      border-radius: 2px;
+      overflow: hidden
+    }
+
+    .mc-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #10b981, #34d399)
+    }
+
+    .float-b {
+      position: absolute;
+      background: #1a2337;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-size: .74rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .3)
+    }
+
+    .fb1 {
+      top: -16px;
+      right: -10px;
+      color: #34d399
+    }
+
+    .fb2 {
+      bottom: 30px;
+      left: -20px;
+      color: #f59e0b
+    }
+
+    .fb3 {
+      top: 45%;
+      right: -30px;
+      color: #6366f1
+    }
+
     /* SECTIONS */
-    section{padding:80px 24px}
-    .container{max-width:1200px;margin:0 auto}
-    .sec-tag{display:inline-block;padding:4px 12px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.18);border-radius:20px;font-size:.75rem;font-weight:600;color:#34d399;margin-bottom:12px}
-    h2.sec-title{font-size:clamp(1.7rem,3.5vw,2.5rem);font-weight:800;letter-spacing:-.03em;margin-bottom:12px}
-    .sec-sub{font-size:.9rem;color:#8fa3c0;line-height:1.7;max-width:500px}
+    section {
+      padding: 80px 24px
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto
+    }
+
+    .sec-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(16, 185, 129, .08);
+      border: 1px solid rgba(16, 185, 129, .18);
+      border-radius: 20px;
+      font-size: .75rem;
+      font-weight: 600;
+      color: #34d399;
+      margin-bottom: 12px
+    }
+
+    h2.sec-title {
+      font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      margin-bottom: 12px
+    }
+
+    .sec-sub {
+      font-size: .9rem;
+      color: #8fa3c0;
+      line-height: 1.7;
+      max-width: 500px
+    }
+
     /* COMPANIES BAR */
-    .co-bar{background:#0f1729;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07);padding:40px 24px}
-    .co-bar-label{text-align:center;font-size:.75rem;color:#4a5d78;font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:24px}
-    .co-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
-    .co-pill{display:flex;align-items:center;gap:6px;padding:7px 14px;background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:8px;font-size:.8rem;font-weight:600;color:#8fa3c0;transition:.2s}
-    .co-pill:hover{border-color:rgba(16,185,129,.25);color:#f0f4ff;transform:translateY(-1px)}
+    .co-bar {
+      background: #0f1729;
+      border-top: 1px solid rgba(255, 255, 255, .07);
+      border-bottom: 1px solid rgba(255, 255, 255, .07);
+      padding: 40px 24px
+    }
+
+    .co-bar-label {
+      text-align: center;
+      font-size: .75rem;
+      color: #4a5d78;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: 24px
+    }
+
+    .co-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px
+    }
+
+    .co-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, .07);
+      border-radius: 8px;
+      font-size: .8rem;
+      font-weight: 600;
+      color: #8fa3c0;
+      transition: .2s
+    }
+
+    .co-pill:hover {
+      border-color: rgba(16, 185, 129, .25);
+      color: #f0f4ff;
+      transform: translateY(-1px)
+    }
+
     /* FEATURES */
-    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
-    .feat-card{background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:24px;transition:.25s}
-    .feat-card:hover{border-color:rgba(16,185,129,.2);transform:translateY(-3px)}
-    .feat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:14px}
-    .feat-title{font-size:.95rem;font-weight:700;margin-bottom:7px}
-    .feat-desc{font-size:.82rem;color:#8fa3c0;line-height:1.6}
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 48px
+    }
+
+    .feat-card {
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, .07);
+      border-radius: 14px;
+      padding: 24px;
+      transition: .25s
+    }
+
+    .feat-card:hover {
+      border-color: rgba(16, 185, 129, .2);
+      transform: translateY(-3px)
+    }
+
+    .feat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 14px
+    }
+
+    .feat-title {
+      font-size: .95rem;
+      font-weight: 700;
+      margin-bottom: 7px
+    }
+
+    .feat-desc {
+      font-size: .82rem;
+      color: #8fa3c0;
+      line-height: 1.6
+    }
+
     /* HOW */
-    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:48px}
-    .step{text-align:center}
-    .step-num{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:900;margin:0 auto 14px;box-shadow:0 6px 20px rgba(16,185,129,.25)}
-    .step-title{font-size:.9rem;font-weight:700;margin-bottom:6px}
-    .step-desc{font-size:.78rem;color:#8fa3c0;line-height:1.5}
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 48px
+    }
+
+    .step {
+      text-align: center
+    }
+
+    .step-num {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 900;
+      margin: 0 auto 14px;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, .25)
+    }
+
+    .step-title {
+      font-size: .9rem;
+      font-weight: 700;
+      margin-bottom: 6px
+    }
+
+    .step-desc {
+      font-size: .78rem;
+      color: #8fa3c0;
+      line-height: 1.5
+    }
+
     /* CTA */
-    .cta-sec{background:linear-gradient(135deg,rgba(16,185,129,.06),rgba(99,102,241,.06));border-top:1px solid rgba(255,255,255,.07)}
-    .cta-inner{max-width:640px;margin:0 auto;text-align:center}
-    footer{background:#0f1729;border-top:1px solid rgba(255,255,255,.07);padding:32px 24px;text-align:center}
-    .foot-logo{font-size:1.2rem;font-weight:800;margin-bottom:6px}
-    .foot-logo span{background:linear-gradient(135deg,#10b981,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    @media(max-width:900px){.hero-inner,.feat-grid{grid-template-columns:1fr}.hero-visual{display:none}.steps{grid-template-columns:repeat(2,1fr)}}
+    .cta-sec {
+      background: linear-gradient(135deg, rgba(16, 185, 129, .06), rgba(99, 102, 241, .06));
+      border-top: 1px solid rgba(255, 255, 255, .07)
+    }
+
+    .cta-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center
+    }
+
+    footer {
+      background: #0f1729;
+      border-top: 1px solid rgba(255, 255, 255, .07);
+      padding: 32px 24px;
+      text-align: center
+    }
+
+    .foot-logo {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 6px
+    }
+
+    .foot-logo span {
+      background: linear-gradient(135deg, #10b981, #34d399);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent
+    }
+
+
+    .company-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+      }
+
+      .hero-sub {
+        margin: 0 auto 32px;
+      }
+
+      .hero-cta {
+        justify-content: center;
+      }
+
+      .hero-stats {
+        justify-content: center;
+      }
+
+      .hero-visual {
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .feat-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .company-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      section {
+        padding: 60px 20px;
+      }
+
+      .hero-visual {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-bottom: 80px;
+      }
+
+      .company-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero-title {
+        font-size: 2.2rem;
+      }
+
+      .feat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-stats {
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .hero-stats>div {
+        flex: 1;
+        min-width: 120px;
+      }
+
+      .co-bar {
+        padding: 32px 16px;
+      }
+    }
   </style>
 </head>
+
 <body>
-<div class="noise"></div>
-<nav class="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="logo">Intern<span>AI</span></a>
-    <div class="nav-links">
-      <a href="#features" style="padding:8px 14px;font-size:.875rem;color:#8fa3c0">Features</a>
-      <a href="#companies" style="padding:8px 14px;font-size:.875rem;color:#8fa3c0">Companies</a>
-      <a href="pages/login.html" class="btn-nav">Login</a>
-      <a href="pages/register.html" class="btn-nav btn-nav--filled">Get Started Free</a>
-    </div>
-  </div>
-</nav>
-
-<section class="hero">
-  <div class="hero-bg"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div><div class="grid-bg"></div></div>
-  <div class="hero-inner">
-    <div>
-      <div class="hero-badge"><span class="badge-dot"></span>AI-Powered Resume Analysis</div>
-      <h1 class="hero-title">Land Internships at<br/><span class="grad">Top 30 Companies</span><br/>With AI Matching</h1>
-      <p class="hero-sub">Upload your resume. Get a real ATS score, extract skills, and match against Amazon, Google, Microsoft, Flipkart & 26 more companies instantly.</p>
-      <div class="hero-cta">
-        <a href="pages/register.html" class="btn-hero btn-hero-p">Start Free — No Credit Card<svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8 4l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        <a href="#companies" class="btn-hero btn-hero-g">View 30 Companies</a>
-      </div>
-      <div class="hero-stats">
-        <div><div class="hs-val">30</div><div class="hs-label">Real Companies</div></div>
-        <div><div class="hs-val">AI</div><div class="hs-label">Skill Extraction</div></div>
-        <div><div class="hs-val">100pt</div><div class="hs-label">ATS Score</div></div>
-        <div><div class="hs-val">Free</div><div class="hs-label">Always</div></div>
+  <div class="noise"></div>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">Intern<span>AI</span></a>
+      <button class="hamburger" id="hamburger" style="display: none;"><span></span><span></span><span></span></button>
+      <div class="nav-links" id="navLinks">
+        <a href="#features" style="padding:8px 14px;font-size:.875rem;color:#8fa3c0">Features</a>
+        <a href="#companies" style="padding:8px 14px;font-size:.875rem;color:#8fa3c0">Companies</a>
+        <a href="pages/login.html" class="btn-nav">Login</a>
+        <a href="pages/register.html" class="btn-nav btn-nav--filled">Get Started</a>
       </div>
     </div>
-    <div class="hero-visual">
-      <div style="position:relative;padding:16px">
-        <div class="mock-card"><div class="mc-head"><div class="mc-logo">🛒</div><div><div class="mc-co">Amazon</div><div class="mc-role">SDE Intern · Hyderabad</div></div></div><div class="mc-tags"><span class="mc-tag">Java</span><span class="mc-tag">Python</span><span class="mc-tag">AWS</span></div><div class="mc-foot"><span class="mc-stip">₹80,000/mo</span><div class="mc-match"><div class="mc-bar"><div class="mc-fill" style="width:92%"></div></div>92%</div></div></div>
-        <div class="mock-card"><div class="mc-head"><div class="mc-logo">🔍</div><div><div class="mc-co">Google</div><div class="mc-role">ML Intern · Hyderabad</div></div></div><div class="mc-tags"><span class="mc-tag">Python</span><span class="mc-tag">TensorFlow</span><span class="mc-tag">PyTorch</span></div><div class="mc-foot"><span class="mc-stip">₹90,000/mo</span><div class="mc-match"><div class="mc-bar"><div class="mc-fill" style="width:85%"></div></div>85%</div></div></div>
-        <div class="mock-card"><div class="mc-head"><div class="mc-logo">📈</div><div><div class="mc-co">Zerodha</div><div class="mc-role">Golang Intern · Bangalore</div></div></div><div class="mc-tags"><span class="mc-tag">Golang</span><span class="mc-tag">PostgreSQL</span><span class="mc-tag">Redis</span></div><div class="mc-foot"><span class="mc-stip">₹50,000/mo</span><div class="mc-match"><div class="mc-bar"><div class="mc-fill" style="width:74%"></div></div>74%</div></div></div>
-        <div class="float-b fb1">🎯 ATS Score: 87/100</div>
-        <div class="float-b fb2">⚡ 14 Skills Detected</div>
-        <div class="float-b fb3">✅ Applied to Zomato!</div>
+  </nav>
+
+  <style>
+    @media (max-width: 1024px) {
+      #hamburger {
+        display: flex !important;
+        margin-left: auto;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: rgba(10, 15, 30, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 20px;
+        border-bottom: 1px solid var(--border);
+        display: none;
+        z-index: 1000;
+      }
+
+      .nav-links.open {
+        display: flex !important;
+      }
+
+      .nav-links a {
+        width: 100%;
+        text-align: center;
+        padding: 12px !important;
+      }
+    }
+  </style>
+
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
+      <div class="grid-bg"></div>
+    </div>
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge"><span class="badge-dot"></span>AI-Powered Resume Analysis</div>
+        <h1 class="hero-title">Land Internships at<br /><span class="grad">Top 30 Companies</span><br />With AI Matching
+        </h1>
+        <p class="hero-sub">Upload your resume. Get a real ATS score, extract skills, and match against Amazon, Google,
+          Microsoft, Flipkart & 26 more companies instantly.</p>
+        <div class="hero-cta">
+          <a href="pages/register.html" class="btn-hero btn-hero-p">Start Free Now<svg width="15" height="15"
+              viewBox="0 0 15 15" fill="none">
+              <path d="M3 7.5h9M8 4l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg></a>
+          <a href="#companies" class="btn-hero btn-hero-g">View Companies</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hs-val">30</div>
+            <div class="hs-label">Companies</div>
+          </div>
+          <div>
+            <div class="hs-val">AI</div>
+            <div class="hs-label">Skills</div>
+          </div>
+          <div>
+            <div class="hs-val">100pt</div>
+            <div class="hs-label">ATS Score</div>
+          </div>
+          <div>
+            <div class="hs-val">Free</div>
+            <div class="hs-label">Always</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div style="position:relative;padding:16px">
+          <div class="mock-card">
+            <div class="mc-head">
+              <div class="mc-logo">🛒</div>
+              <div>
+                <div class="mc-co">Amazon</div>
+                <div class="mc-role">SDE Intern · Hyderabad</div>
+              </div>
+            </div>
+            <div class="mc-tags"><span class="mc-tag">Java</span><span class="mc-tag">Python</span><span
+                class="mc-tag">AWS</span></div>
+            <div class="mc-foot"><span class="mc-stip">₹80,000/mo</span>
+              <div class="mc-match">
+                <div class="mc-bar">
+                  <div class="mc-fill" style="width:92%"></div>
+                </div>92%
+              </div>
+            </div>
+          </div>
+          <div class="mock-card">
+            <div class="mc-head">
+              <div class="mc-logo">🔍</div>
+              <div>
+                <div class="mc-co">Google</div>
+                <div class="mc-role">ML Intern · Hyderabad</div>
+              </div>
+            </div>
+            <div class="mc-tags"><span class="mc-tag">Python</span><span class="mc-tag">TensorFlow</span><span
+                class="mc-tag">PyTorch</span></div>
+            <div class="mc-foot"><span class="mc-stip">₹90,000/mo</span>
+              <div class="mc-match">
+                <div class="mc-bar">
+                  <div class="mc-fill" style="width:85%"></div>
+                </div>85%
+              </div>
+            </div>
+          </div>
+          <div class="mock-card">
+            <div class="mc-head">
+              <div class="mc-logo">📈</div>
+              <div>
+                <div class="mc-co">Zerodha</div>
+                <div class="mc-role">Golang Intern · Bangalore</div>
+              </div>
+            </div>
+            <div class="mc-tags"><span class="mc-tag">Golang</span><span class="mc-tag">PostgreSQL</span><span
+                class="mc-tag">Redis</span></div>
+            <div class="mc-foot"><span class="mc-stip">₹50,000/mo</span>
+              <div class="mc-match">
+                <div class="mc-bar">
+                  <div class="mc-fill" style="width:74%"></div>
+                </div>74%
+              </div>
+            </div>
+          </div>
+          <div class="float-b fb1">🎯 ATS Score: 87/100</div>
+          <div class="float-b fb2">⚡ 14 Skills Detected</div>
+          <div class="float-b fb3">✅ Applied to Zomato!</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="co-bar">
+    <div class="container">
+      <div class="co-bar-label">Trusted by students worldwide</div>
+      <div class="co-pills" id="companies">
+        <div class="co-pill"><span>🛒</span>Amazon</div>
+        <div class="co-pill"><span>🔍</span>Google</div>
+        <div class="co-pill"><span>🪟</span>Microsoft</div>
+        <div class="co-pill"><span>💼</span>Wipro</div>
+        <div class="co-pill"><span>🏢</span>Infosys</div>
+        <div class="co-pill"><span>🛍️</span>Flipkart</div>
+        <div class="co-pill"><span>🔧</span>TCS</div>
+        <div class="co-pill"><span>🔵</span>IBM</div>
+        <div class="co-pill"><span>🍕</span>Zomato</div>
+        <div class="co-pill"><span>🏍️</span>Swiggy</div>
+        <div class="co-pill"><span>📈</span>Zerodha</div>
+        <div class="co-pill"><span>🚗</span>Uber</div>
       </div>
     </div>
   </div>
-</section>
 
-<div class="co-bar">
-  <div class="container">
-    <div class="co-bar-label">Internships from companies you know</div>
-    <div class="co-pills">
-      <div class="co-pill"><span>🛒</span>Amazon</div><div class="co-pill"><span>🔍</span>Google</div><div class="co-pill"><span>🪟</span>Microsoft</div><div class="co-pill"><span>💼</span>Wipro</div><div class="co-pill"><span>🏢</span>Infosys</div><div class="co-pill"><span>🛍️</span>Flipkart</div><div class="co-pill"><span>🔧</span>TCS</div><div class="co-pill"><span>🔵</span>IBM</div><div class="co-pill"><span>📱</span>Samsung</div><div class="co-pill"><span>☁️</span>Accenture</div><div class="co-pill"><span>🍕</span>Zomato</div><div class="co-pill"><span>🏍️</span>Swiggy</div><div class="co-pill"><span>⚡</span>Razorpay</div><div class="co-pill"><span>💎</span>CRED</div><div class="co-pill"><span>📈</span>Zerodha</div><div class="co-pill"><span>🚗</span>Uber</div><div class="co-pill"><span>📲</span>PhonePe</div><div class="co-pill"><span>🏏</span>Dream11</div><div class="co-pill"><span>🤖</span>Sarvam AI</div><div class="co-pill"><span>⭐</span>Hotstar</div>
+  <section id="features">
+    <div class="container">
+      <div style="text-align:center">
+        <div class="sec-tag">Features</div>
+        <h2 class="sec-title">Everything you need to get hired</h2>
+        <p class="sec-sub" style="margin:0 auto">From ATS scoring to application tracking.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(16,185,129,.1)">🎯</div>
+          <div class="feat-title">Real ATS Score</div>
+          <div class="feat-desc">100-point score based on your actual resume content.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(99,102,241,.1)">🤖</div>
+          <div class="feat-title">AI Skill Extraction</div>
+          <div class="feat-desc">Extract all technical skills from PDF/DOCX automatically.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(139,92,246,.1)">⚡</div>
+          <div class="feat-title">Smart Matching</div>
+          <div class="feat-desc">Match % calculated against company requirements instantly.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(245,158,11,.1)">📋</div>
+          <div class="feat-title">Application Tracker</div>
+          <div class="feat-desc">One-click apply tracked permanently in your profile.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(59,130,246,.1)">👤</div>
+          <div class="feat-title">Professional Profile</div>
+          <div class="feat-desc">Full profile with LinkedIn, GitHub, and college details.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(239,68,68,.1)">🏢</div>
+          <div class="feat-title">30 Real Companies</div>
+          <div class="feat-desc">FAANG giants and top startups with real stipends.</div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+  </section>
 
-<section id="features">
-  <div class="container">
-    <div style="text-align:center"><div class="sec-tag">Features</div><h2 class="sec-title">Everything you need to get hired</h2><p class="sec-sub" style="margin:0 auto">From ATS scoring to application tracking — all in one place.</p></div>
-    <div class="feat-grid">
-      <div class="feat-card"><div class="feat-icon" style="background:rgba(16,185,129,.1)">🎯</div><div class="feat-title">Real ATS Score</div><div class="feat-desc">100-point score based on your actual resume content — skills, contact info, education, projects, and completeness. Different for every resume.</div></div>
-      <div class="feat-card"><div class="feat-icon" style="background:rgba(99,102,241,.1)">🤖</div><div class="feat-title">AI Skill Extraction</div><div class="feat-desc">Our engine reads your PDF/DOCX and extracts all technical skills — 50+ categories including programming, AI/ML, DevOps, mobile, and more.</div></div>
-      <div class="feat-card"><div class="feat-icon" style="background:rgba(139,92,246,.1)">⚡</div><div class="feat-title">Smart Matching</div><div class="feat-desc">Match % calculated against each company's required and preferred skills. See exactly what's missing and what you already have.</div></div>
-      <div class="feat-card"><div class="feat-icon" style="background:rgba(245,158,11,.1)">📋</div><div class="feat-title">Application Tracker</div><div class="feat-desc">Click Apply → saved to Supabase instantly. See all companies you applied to on your Profile page with date and match score.</div></div>
-      <div class="feat-card"><div class="feat-icon" style="background:rgba(59,130,246,.1)">👤</div><div class="feat-title">Professional Profile</div><div class="feat-desc">Full profile with LinkedIn, GitHub, mobile number, college, branch, and bio — all stored permanently in database.</div></div>
-      <div class="feat-card"><div class="feat-icon" style="background:rgba(239,68,68,.1)">🏢</div><div class="feat-title">30 Real Companies</div><div class="feat-desc">Amazon, Google, Microsoft, Zomato, Zerodha, CRED, Dream11, Sarvam AI, and 22 more — with real stipends and apply links.</div></div>
+  <section id="company-list" style="background:#0f1729;border-top:1px solid rgba(255,255,255,.07)">
+    <div class="container">
+      <div class="sec-tag">Company Directory</div>
+      <h2 class="sec-title">Real companies with active openings</h2>
+      <div class="company-grid">
+        <div class="feat-card" style="padding:18px;text-align:center">
+          <div style="font-size:1.8rem;margin-bottom:6px">🛒</div>
+          <div style="font-size:.8rem;font-weight:700">Amazon</div>
+          <div style="font-size:.68rem;color:#8fa3c0">₹80K/mo</div>
+        </div>
+        <div class="feat-card" style="padding:18px;text-align:center">
+          <div style="font-size:1.8rem;margin-bottom:6px">🔍</div>
+          <div style="font-size:.8rem;font-weight:700">Google</div>
+          <div style="font-size:.68rem;color:#8fa3c0">₹90K/mo</div>
+        </div>
+        <div class="feat-card" style="padding:18px;text-align:center">
+          <div style="font-size:1.8rem;margin-bottom:6px">🪟</div>
+          <div style="font-size:.8rem;font-weight:700">Microsoft</div>
+          <div style="font-size:.68rem;color:#8fa3c0">₹75K/mo</div>
+        </div>
+        <div class="feat-card" style="padding:18px;text-align:center">
+          <div style="font-size:1.8rem;margin-bottom:6px">🍕</div>
+          <div style="font-size:.8rem;font-weight:700">Zomato</div>
+          <div style="font-size:.68rem;color:#8fa3c0">₹45K/mo</div>
+        </div>
+        <div class="feat-card" style="padding:18px;text-align:center">
+          <div style="font-size:1.8rem;margin-bottom:6px">📈</div>
+          <div style="font-size:.8rem;font-weight:700">Zerodha</div>
+          <div style="font-size:.68rem;color:#8fa3c0">₹50K/mo</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:32px"><a href="pages/register.html" class="btn-hero btn-hero-p"
+          style="display:inline-flex">View All 30 & Apply →</a></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="companies" style="background:#0f1729;border-top:1px solid rgba(255,255,255,.07)">
-  <div class="container">
-    <div class="sec-tag">30 Companies</div><h2 class="sec-title">Real companies, real internships</h2><p class="sec-sub">From FAANG giants to India's top startups</p>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:40px">
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">🛒</div><div style="font-size:.8rem;font-weight:700">Amazon</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">SDE · ₹80K/mo</div></div>
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">🔍</div><div style="font-size:.8rem;font-weight:700">Google</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">ML · ₹90K/mo</div></div>
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">🪟</div><div style="font-size:.8rem;font-weight:700">Microsoft</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">SWE · ₹75K/mo</div></div>
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">🚗</div><div style="font-size:.8rem;font-weight:700">Uber India</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">SDE · ₹70K/mo</div></div>
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">📈</div><div style="font-size:.8rem;font-weight:700">Zerodha</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">Golang · ₹50K/mo</div></div>
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">🍕</div><div style="font-size:.8rem;font-weight:700">Zomato</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">Backend · ₹45K/mo</div></div>
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">⭐</div><div style="font-size:.8rem;font-weight:700">Hotstar</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">SRE · ₹45K/mo</div></div>
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">🛍️</div><div style="font-size:.8rem;font-weight:700">Flipkart</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">Frontend · ₹40K/mo</div></div>
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">🏍️</div><div style="font-size:.8rem;font-weight:700">Swiggy</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">Data Engg · ₹40K/mo</div></div>
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">🤖</div><div style="font-size:.8rem;font-weight:700">Sarvam AI</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">NLP · ₹60K/mo</div></div>
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">💎</div><div style="font-size:.8rem;font-weight:700">CRED</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">React · ₹35K/mo</div></div>
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">📲</div><div style="font-size:.8rem;font-weight:700">PhonePe</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">Analytics · ₹30K/mo</div></div>
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">🏏</div><div style="font-size:.8rem;font-weight:700">Dream11</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">React Native · ₹40K/mo</div></div>
-      <div style="background:#111827;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center;transition:.2s" onmouseover="this.style.borderColor='rgba(16,185,129,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'"><div style="font-size:1.8rem;margin-bottom:6px">🔵</div><div style="font-size:.8rem;font-weight:700">IBM</div><div style="font-size:.68rem;color:#8fa3c0;margin-top:2px">AI Research · ₹35K/mo</div></div>
+  <section id="how">
+    <div class="container">
+      <div style="text-align:center">
+        <div class="sec-tag">Process</div>
+        <h2 class="sec-title">Get matched in 4 easy steps</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-title">Join Free</div>
+          <div class="step-desc">Create your account in seconds.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-title">Upload</div>
+          <div class="step-desc">PDF/DOCX resume analysis.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-title">Match</div>
+          <div class="step-desc">See your fit across 30 companies.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-title">Apply</div>
+          <div class="step-desc">One-click apply and track status.</div>
+        </div>
+      </div>
     </div>
-    <div style="text-align:center;margin-top:32px"><a href="pages/register.html" class="btn-hero btn-hero-p" style="display:inline-flex">View All 30 Companies & Apply →</a></div>
-  </div>
-</section>
+  </section>
 
-<section id="how">
-  <div class="container">
-    <div style="text-align:center"><div class="sec-tag">How It Works</div><h2 class="sec-title">Get matched in 4 steps</h2></div>
-    <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-title">Register Free</div><div class="step-desc">Name, email, college, branch — 30 seconds to create your account.</div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-title">Upload Resume</div><div class="step-desc">PDF or DOCX. AI reads your file and extracts all skills + calculates real ATS score.</div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-title">See Matches</div><div class="step-desc">Get match % for all 30 companies. Filter by domain, location, stipend.</div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-title">Apply & Track</div><div class="step-desc">One-click apply. Every application saved to your profile with date & status.</div></div>
+  <section class="cta-sec">
+    <div class="container">
+      <div class="cta-inner">
+        <h2 class="sec-title">Your dream internship is waiting</h2>
+        <p class="sec-sub" style="margin:0 auto 32px">Join thousands of students landing internships.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a href="pages/register.html" class="btn-hero btn-hero-p">Register Now</a>
+          <a href="pages/login.html" class="btn-hero btn-hero-g">Login</a>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="cta-sec">
-  <div class="container"><div class="cta-inner">
-    <div class="sec-tag">Start Today</div>
-    <h2 class="sec-title">Your dream internship is one upload away</h2>
-    <p class="sec-sub" style="margin:0 auto 32px">Join students landing internships at top companies using InternAI's smart matching engine.</p>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <a href="pages/register.html" class="btn-hero btn-hero-p">Create Free Account</a>
-      <a href="pages/login.html" class="btn-hero btn-hero-g">Already have account</a>
+  <footer>
+    <div class="container">
+      <div class="foot-logo">Intern<span>AI</span></div>
+      <div style="font-size:.78rem;color:#4a5d78">30 Real Companies · 2025 Edition</div>
     </div>
-  </div></div>
-</section>
+  </footer>
 
-<footer>
-  <div class="container">
-    <div class="foot-logo">Intern<span>AI</span></div>
-    <div style="font-size:.78rem;color:#4a5d78;margin-top:6px">AI-Powered Internship Matching · 30 Real Companies · Free Forever</div>
-    <div style="margin-top:16px;display:flex;gap:20px;justify-content:center">
-      <a href="pages/login.html" style="font-size:.78rem;color:#4a5d78">Login</a>
-      <a href="pages/register.html" style="font-size:.78rem;color:#4a5d78">Register</a>
-      <a href="pages/dashboard.html" style="font-size:.78rem;color:#4a5d78">Dashboard</a>
-    </div>
-  </div>
-</footer>
+  <script>
+    const ham = document.getElementById('hamburger');
+    const links = document.getElementById('navLinks');
+    if (ham) ham.onclick = () => links.classList.toggle('open');
+    document.querySelectorAll('.nav-links a').forEach(a => a.onclick = () => links.classList.remove('open'));
+  </script>
 </body>
+
 </html>
