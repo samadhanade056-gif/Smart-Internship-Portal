@@ -7,11 +7,14 @@ const authMW = require('../middleware/auth');
 const supabase = require('../config/supabase');
 const INTERNSHIPS = require('../../database/internships.json');
 
+const UPLOADS_DIR = process.env.VERCEL ? '/tmp' : path.join(__dirname, '../uploads');
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const dir = path.join(__dirname, '../uploads');
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
+    if (!fs.existsSync(UPLOADS_DIR) && !process.env.VERCEL) {
+      try { fs.mkdirSync(UPLOADS_DIR, { recursive: true }); } catch (e) { }
+    }
+    cb(null, UPLOADS_DIR);
   },
   filename: (req, file, cb) => cb(null, `resume_${Date.now()}${path.extname(file.originalname)}`)
 });
@@ -73,13 +76,13 @@ router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
     const atsResult = computeRealATSScore(resumeText, extractedSkills, originalName);
 
     // Generate recommendations matching against all 30 companies
-    const recommendations = generateRecommendations(extractedSkills.allSkills);
+    const recommendations = generateRecommendations(extractedSkills.all_skills);
 
     // ── SAVE TO SUPABASE ──────────────────────────────
     // IMPORTANT: If your upload fails, run this in Supabase SQL Editor:
     // ALTER TABLE users ADD COLUMN resume_text TEXT DEFAULT '';
     const { error: updateError } = await supabase.from('users').update({
-      skills: extractedSkills.allSkills,
+      skills: extractedSkills.all_skills,
       ats_score: atsResult.total_score,
       ats_breakdown: atsResult.breakdown,
       // resume_text: resumeText.slice(0, 5000), // Uncomment after running the SQL command above!
@@ -89,19 +92,15 @@ router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
     if (updateError) {
       console.error('Supabase update error:', updateError.message);
     } else {
-      console.log(`✅ Saved to Supabase: user ${req.user.id} | skills: ${extractedSkills.allSkills.length} | ATS: ${atsResult.total_score}`);
+      console.log(`✅ Saved to Supabase: user ${req.user.id} | skills: ${extractedSkills.all_skills.length} | ATS: ${atsResult.total_score}`);
     }
 
     fs.unlink(filePath, () => { });
 
     res.json({
       success: true,
-      message: `Found ${extractedSkills.allSkills.length} skills! ATS Score: ${atsResult.total_score}/100`,
-      skills: {
-        all_skills: extractedSkills.allSkills,
-        total_skills_found: extractedSkills.allSkills.length,
-        by_category: extractedSkills.byCategory
-      },
+      message: `Found ${extractedSkills.all_skills.length} skills! ATS Score: ${atsResult.total_score}/100`,
+      skills: extractedSkills,
       ats_score: atsResult,
       contact: extractedSkills.contact,
       education: extractedSkills.education,
@@ -111,8 +110,13 @@ router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
 
   } catch (err) {
     console.error('Resume analyze error:', err.message);
-    fs.unlink(filePath, () => { });
-    res.status(500).json({ success: false, message: 'Analysis failed: ' + err.message });
+    if (filePath && fs.existsSync(filePath)) {
+      try { fs.unlinkSync(filePath); } catch (e) { }
+    }
+    res.status(err.status || 500).json({
+      success: false,
+      message: 'Analysis failed: ' + (err.message || 'Unknown server error')
+    });
   }
 });
 
@@ -232,8 +236,9 @@ function extractSkillsFromText(text, filename) {
   const yearMatch = text.match(/(\d+)\s*(year|yr)s?\s*(of\s*)?(experience|exp)/i);
 
   return {
-    allSkills: [...allFound],
-    byCategory: found,
+    all_skills: [...allFound],
+    total_skills_found: allFound.size,
+    by_category: found,
     contact: {
       email: emailMatch ? emailMatch[0] : null,
       phone: phoneMatch ? phoneMatch[0] : null,
@@ -261,7 +266,7 @@ function computeRealATSScore(text, extracted, filename) {
   const breakdown = {};
 
   // 1. Skills Richness (max 35 pts)
-  const skillCount = extracted.allSkills.length;
+  const skillCount = extracted.all_skills.length;
   const skillScore = skillCount >= 15 ? 35 : skillCount >= 10 ? 28 : skillCount >= 6 ? 20 : skillCount >= 3 ? 12 : Math.max(2, skillCount * 3);
   breakdown.skills = { score: skillScore, max: 35, label: 'Skills Richness' };
 

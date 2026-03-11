@@ -1,7 +1,7 @@
 /* ══════════════════════════════════════════════════════════
    InternAI v5 — Main JS
 ══════════════════════════════════════════════════════════ */
-const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api';
+const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? 'http://localhost:5000/api' : '/api';
 
 function showToast(msg, type = 'success') {
   let t = document.getElementById('toast');
@@ -83,9 +83,15 @@ async function uploadResume(file) {
   try {
     const fd = new FormData(); fd.append('resume', file);
     const res = await fetch(API_BASE + '/resume/analyze', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd });
-    const data = await res.json();
+    let data;
+    try {
+      data = await res.json();
+    } catch (e) {
+      throw new Error('Server returned an invalid response (not JSON). ' + (res.status === 500 ? 'This is likely a server crash.' : 'Status: ' + res.status));
+    }
+
     if (res.status === 401) { localStorage.clear(); zone.innerHTML = `<h3>Session expired</h3><a href="/pages/login.html" style="color:#10b981">Login again</a>`; return; }
-    if (!res.ok) throw new Error(data.message || 'Analysis failed');
+    if (!res.ok) throw new Error(data.message || 'Analysis failed (HTTP ' + res.status + ')');
     zone.innerHTML = `<div class="upload-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#10b981" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="#10b981" stroke-width="1.5"/></svg></div><h3>✅ ${file.name}</h3><p style="color:#34d399;font-weight:600">${data.skills?.total_skills_found || 0} skills found · ATS Score: <strong>${data.ats_score?.total_score || 0}/100</strong></p>`;
     showToast(`Resume analyzed! ${data.skills?.total_skills_found || 0} skills found 🎉`);
     renderResults(data);
