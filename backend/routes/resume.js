@@ -56,19 +56,23 @@ router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
     const atsResult = computeRealATSScore(resumeText, extractedSkills, originalName);
     const recommendations = generateRecommendations(extractedSkills.all_skills);
 
-    const { error: updateError } = await supabase.from('users').update({
-      skills: extractedSkills.all_skills,
-      ats_score: atsResult.total_score,
-      ats_breakdown: atsResult.breakdown,
-      resume_text: resumeText.slice(0, 10000), // Enabled resume text storage
-      updated_at: new Date().toISOString()
-    }).eq('id', req.user.id);
+    // ── SAVE TO SUPABASE ──────────────────────────────
+    if (supabase && typeof supabase.from === 'function') {
+      const { error: updateError } = await supabase.from('users').update({
+        skills: extractedSkills.all_skills,
+        ats_score: atsResult.total_score,
+        ats_breakdown: atsResult.breakdown,
+        resume_text: resumeText.slice(0, 10000),
+        updated_at: new Date().toISOString()
+      }).eq('id', req.user.id);
 
-    if (updateError) {
-      console.error('Supabase update error:', updateError.message);
-      // We don't throw here to still return the results to user, but we log it
+      if (updateError) {
+        console.error('Supabase update error:', updateError.message);
+      } else {
+        console.log(`✅ Saved to Supabase: user ${req.user.id} | skills: ${extractedSkills.all_skills.length} | ATS: ${atsResult.total_score}`);
+      }
     } else {
-      console.log(`✅ Saved to Supabase: user ${req.user.id} | skills: ${extractedSkills.all_skills.length} | ATS: ${atsResult.total_score}`);
+      console.warn('⚠️ Supabase client not initialized properly, results not saved to DB.');
     }
 
     res.json({
