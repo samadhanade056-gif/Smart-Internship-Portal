@@ -29,19 +29,27 @@ router.post('/register', async (req, res) => {
     const colors = ['#10b981', '#6366f1', '#f59e0b', '#ec4899', '#3b82f6', '#8b5cf6'];
     const avatar_color = colors[Math.floor(Math.random() * colors.length)];
 
-    const { data: user, error } = await supabase.from('users').insert({
+    const { data, error } = await supabase.from('users').insert({
       name: name.trim(), email: email.toLowerCase().trim(), password: hashed,
       college: (college || '').trim(), branch: (branch || '').trim(),
       mobile: (mobile || '').trim(), avatar_color
     }).select('id,name,email,college,branch,mobile,skills,ats_score,avatar_color,created_at').single();
 
-    if (error) { 
+    if (error && error.message !== 'Supabase not configured') { 
       console.error('[AUTH] Register insert error:', error.message); 
       return res.status(500).json({ success: false, message: 'Could not create account: ' + error.message });
     }
 
+    // Fallback if data is null (Dummy mode)
+    const user = data || { 
+      id: 'demo-' + Date.now(), 
+      name: name.trim(), 
+      email: email.toLowerCase().trim(),
+      avatar_color
+    };
+
     const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, SECRET, { expiresIn: '7d' });
-    console.log(`[AUTH] Register successful: ${email}`);
+    console.log(`[AUTH] Register successful: ${email} (Demo: ${!data})`);
     res.status(201).json({ success: true, token, user });
   } catch (err) {
     console.error('[AUTH] Register catch:', err.message);
@@ -73,12 +81,20 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Incorrect password. Please try again.' });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: user.id || 'demo-user', email: user.email, name: user.name }, SECRET, { expiresIn: '7d' });
     const { password: _, ...safeUser } = user;
-    console.log(`[AUTH] Login successful: ${email} (${user.id})`);
+    console.log(`[AUTH] Login successful: ${email} (${user.id || 'demo'})`);
     res.json({ success: true, token, user: safeUser });
   } catch (err) {
     console.error('[AUTH] Login catch error:', err.message);
+    
+    // Safety fallback for Demo Login if Database fails entirely
+    if (req.body.email === 'demo@internai.com') {
+      const demoUser = { id: 'demo-123', name: 'Demo Student', email: 'demo@internai.com', avatar_color: '#10b981' };
+      const token = jwt.sign(demoUser, SECRET);
+      return res.json({ success: true, token, user: demoUser });
+    }
+    
     res.status(500).json({ success: false, message: 'Internal server error: ' + err.message });
   }
 });
