@@ -28,8 +28,13 @@ async function apiFetch(path, opts = {}) {
     headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(opts.headers || {}) },
     ...opts
   });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message || 'Request failed');
+  let data;
+  try {
+    data = await res.json();
+  } catch (e) {
+    throw new Error('Server returned an invalid response (not JSON). ' + (res.status === 500 ? 'Internal Server Error' : 'Status: ' + res.status));
+  }
+  if (!res.ok) throw new Error(data.message || 'Request failed (HTTP ' + res.status + ')');
   return data;
 }
 
