@@ -31,7 +31,17 @@ function getInternships() {
 }
 
 // ── POST /api/resume/analyze ───────────────────────────
-router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
+router.post('/analyze', authMW, (req, res, next) => {
+  upload.single('resume')(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_FILE_SIZE') return res.status(400).json({ success: false, message: 'File too large (max 4MB)' });
+      return res.status(400).json({ success: false, message: 'Upload error: ' + err.message });
+    } else if (err) {
+      return res.status(400).json({ success: false, message: err.message });
+    }
+    next();
+  });
+}, async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ success: false, message: 'No file uploaded' });
 

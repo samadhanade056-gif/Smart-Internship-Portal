@@ -15,7 +15,8 @@ try {
     supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
     console.log('✅ Supabase connected!');
   } else {
-    // Return a dummy object that logs errors when called
+    // Return a dummy object that returns null data instead of errors
+    // This allows the app to stay in "Demo Mode" without crashing or showing error toasts
     const dummyQuery = {
       select: () => dummyQuery,
       update: () => dummyQuery,
@@ -26,13 +27,14 @@ try {
       or: () => dummyQuery,
       order: () => dummyQuery,
       limit: () => dummyQuery,
-      single: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
-      maybeSingle: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
-      then: (resolve) => resolve({ data: [], error: { message: 'Supabase not configured' } })
+      single: () => Promise.resolve({ data: null, error: null }),
+      maybeSingle: () => Promise.resolve({ data: null, error: null }),
+      then: (resolve) => resolve({ data: [], error: null })
     };
     supabase = {
       from: () => dummyQuery
     };
+    console.log('⚠️ Supabase not configured - Running in Demo/Safe mode.');
   }
 } catch (err) {
   console.error('❌ Supabase Client Initialization Failed:', err.message);
