@@ -24,18 +24,34 @@ async function apiFetch(path, opts = {}) {
     if (path.startsWith('/internships')) return { success: true, internships: [{ id: 'DEMO1', title: 'AI Developer Intern', company: 'Google (Demo)', logo: '🔍', location: 'Remote', duration: '3 months', stipend: '₹90,000/mo', match_score: 92, matched_skills: ['Python', 'React'], missing_skills: ['Go'] }, { id: 'DEMO2', title: 'Full Stack Intern', company: 'Amazon (Demo)', logo: '🛒', location: 'Bangalore', duration: '6 months', stipend: '₹80,000/mo', match_score: 78, matched_skills: ['Javascript', 'Node.js'], missing_skills: ['AWS'] }] };
     return { success: true, message: 'Demo Success' };
   }
-  const res = await fetch(API_BASE + path, {
-    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(opts.headers || {}) },
-    ...opts
-  });
-  let data;
+  
   try {
-    data = await res.json();
-  } catch (e) {
-    throw new Error('Server returned an invalid response (not JSON). ' + (res.status === 500 ? 'Internal Server Error' : 'Status: ' + res.status));
+    const res = await fetch(API_BASE + path, {
+      headers: { 
+        'Content-Type': 'application/json', 
+        ...(token ? { Authorization: `Bearer ${token}` } : {}), 
+        ...(opts.headers || {}) 
+      },
+      ...opts
+    });
+    
+    const contentType = res.headers.get('content-type');
+    let data;
+    
+    if (contentType && contentType.includes('application/json')) {
+      data = await res.json();
+    } else {
+      const text = await res.text();
+      console.error('Non-JSON response:', text.slice(0, 200));
+      throw new Error(`Server returned an invalid response. ${res.status === 500 ? 'Internal Server Error' : 'Status: ' + res.status}`);
+    }
+
+    if (!res.ok) throw new Error(data.message || `Request failed (HTTP ${res.status})`);
+    return data;
+  } catch (err) {
+    if (err.message.includes('Failed to fetch')) throw new Error('Could not connect to server. Please check your internet or try again later.');
+    throw err;
   }
-  if (!res.ok) throw new Error(data.message || 'Request failed (HTTP ' + res.status + ')');
-  return data;
 }
 
 // Hamburger & Mobile Nav
@@ -245,7 +261,7 @@ async function handleLogin(e) {
     const data = await apiFetch('/auth/login', { method: 'POST', body: JSON.stringify({ email, password: document.getElementById('password').value }) });
     setToken(data.token); setUser(data.user);
     showToast('Welcome back, ' + data.user.name + '! 👋');
-    setTimeout(() => window.location.href = '/pages/dashboard.html', 800);
+    setTimeout(() => window.location.href = 'dashboard.html', 800);
   } catch (err) {
     showToast(err.message, 'error');
     if (btn) { btn.textContent = 'Login to Dashboard'; btn.disabled = false; }
@@ -270,7 +286,7 @@ async function handleRegister(e) {
     const data = await apiFetch('/auth/register', { method: 'POST', body: JSON.stringify({ name: document.getElementById('name').value, email: document.getElementById('email').value, password: pwd, college: document.getElementById('college')?.value || '', branch: document.getElementById('branch')?.value || '', mobile: document.getElementById('mobile')?.value || '' }) });
     setToken(data.token); setUser(data.user);
     showToast('Account created! Welcome 🎉');
-    setTimeout(() => window.location.href = '/pages/dashboard.html', 800);
+    setTimeout(() => window.location.href = 'dashboard.html', 800);
   } catch (err) { showToast(err.message, 'error'); btn.textContent = 'Create Account Free'; btn.disabled = false; }
 }
 

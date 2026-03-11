@@ -10,12 +10,19 @@ const SECRET = process.env.JWT_SECRET || 'internai_secret_2025';
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, college, branch, mobile } = req.body;
+    console.log(`[AUTH] Register attempt: ${email}`);
+    
     if (!name || !email || !password)
       return res.status(400).json({ success: false, message: 'Name, email and password are required' });
     if (password.length < 8)
       return res.status(400).json({ success: false, message: 'Password must be at least 8 characters' });
 
-    const { data: existing } = await supabase.from('users').select('id').eq('email', email.toLowerCase().trim()).maybeSingle();
+    const { data: existing, error: checkError } = await supabase.from('users').select('id').eq('email', email.toLowerCase().trim()).maybeSingle();
+    if (checkError) {
+      console.error('[AUTH] Supabase check error:', checkError.message);
+      return res.status(500).json({ success: false, message: 'Database connection error during registration' });
+    }
+    
     if (existing) return res.status(409).json({ success: false, message: 'Email already registered. Please login.' });
 
     const hashed = await bcrypt.hash(password, 10);
@@ -28,13 +35,17 @@ router.post('/register', async (req, res) => {
       mobile: (mobile || '').trim(), avatar_color
     }).select('id,name,email,college,branch,mobile,skills,ats_score,avatar_color,created_at').single();
 
-    if (error) { console.error('Register error:', error); throw error; }
+    if (error) { 
+      console.error('[AUTH] Register insert error:', error.message); 
+      return res.status(500).json({ success: false, message: 'Could not create account: ' + error.message });
+    }
 
     const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, SECRET, { expiresIn: '7d' });
+    console.log(`[AUTH] Register successful: ${email}`);
     res.status(201).json({ success: true, token, user });
   } catch (err) {
-    console.error('Register catch:', err.message);
-    res.status(500).json({ success: false, message: err.message });
+    console.error('[AUTH] Register catch:', err.message);
+    res.status(500).json({ success: false, message: 'Internal server error during registration' });
   }
 });
 
@@ -47,18 +58,19 @@ router.post('/login', async (req, res) => {
 
     const { data: user, error } = await supabase.from('users').select('*').eq('email', email.toLowerCase().trim()).maybeSingle();
     if (error) {
-      console.error('[AUTH] Supabase error:', error.message);
-      throw error;
+      console.error('[AUTH] Supabase login error:', error.message);
+      return res.status(500).json({ success: false, message: 'Database error: ' + error.message });
     }
+    
     if (!user) {
       console.warn(`[AUTH] User not found: ${email}`);
-      return res.status(401).json({ success: false, message: 'No account with this email. Please register.' });
+      return res.status(401).json({ success: false, message: 'No account found with this email. Please register first.' });
     }
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
       console.warn(`[AUTH] Wrong password for: ${email}`);
-      return res.status(401).json({ success: false, message: 'Wrong password. Please try again.' });
+      return res.status(401).json({ success: false, message: 'Incorrect password. Please try again.' });
     }
 
     const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, SECRET, { expiresIn: '7d' });
@@ -66,8 +78,8 @@ router.post('/login', async (req, res) => {
     console.log(`[AUTH] Login successful: ${email} (${user.id})`);
     res.json({ success: true, token, user: safeUser });
   } catch (err) {
-    console.error('[AUTH] Catch-all error:', err.message);
-    res.status(500).json({ success: false, message: err.message });
+    console.error('[AUTH] Login catch error:', err.message);
+    res.status(500).json({ success: false, message: 'Internal server error: ' + err.message });
   }
 });
 

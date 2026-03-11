@@ -29,7 +29,7 @@ app.use('/api/resume', require('./routes/resume'));
 app.use('/api/internships', require('./routes/internships'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 
-app.get('/api/health', (_, res) => res.json({ status: 'ok', version: '5.0.0', companies: 30 }));
+app.get('/api/health', (_, res) => res.json({ status: 'ok', version: '5.0.0', companies: 'Top' }));
 
 app.get('*', (_, res) => res.sendFile(path.join(__dirname, '../frontend/index.html')));
 

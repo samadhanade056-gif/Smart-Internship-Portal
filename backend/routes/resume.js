@@ -9,16 +9,7 @@ const INTERNSHIPS = require('../../database/internships.json');
 
 const UPLOADS_DIR = process.env.VERCEL ? '/tmp' : path.join(__dirname, '../uploads');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (!fs.existsSync(UPLOADS_DIR) && !process.env.VERCEL) {
-      try { fs.mkdirSync(UPLOADS_DIR, { recursive: true }); } catch (e) { }
-    }
-    cb(null, UPLOADS_DIR);
-  },
-  filename: (req, file, cb) => cb(null, `resume_${Date.now()}${path.extname(file.originalname)}`)
-});
-
+const storage = multer.memoryStorage();
 const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 },
@@ -34,13 +25,11 @@ const pdf = require('pdf-parse');
 router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
   if (!req.file) return res.status(400).json({ success: false, message: 'No file uploaded' });
 
-  const filePath = req.file.path;
   const originalName = req.file.originalname;
   let resumeText = '';
 
   try {
-    // Read and Extract text from file
-    const fileBuffer = fs.readFileSync(filePath);
+    const fileBuffer = req.file.buffer;
     const ext = path.extname(originalName).toLowerCase();
 
     if (ext === '.txt') {
@@ -51,51 +40,36 @@ router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
         resumeText = data.text;
       } catch (e) {
         console.error('PDF parsing error:', e.message);
-        // Fallback to binary text extraction
         resumeText = fileBuffer.toString('utf8', 0, fileBuffer.length).replace(/[^\x20-\x7E\n\r\t]/g, ' ');
       }
     } else {
-      // DOCX fallback: binary text extraction
       resumeText = fileBuffer.toString('utf8', 0, fileBuffer.length).replace(/[^\x20-\x7E\n\r\t]/g, ' ');
     }
 
-    // Professional Cleanup
-    resumeText = resumeText
-      .replace(/\s+/g, ' ')
-      .replace(/[\n\r\t]/g, ' ')
-      .trim();
+    resumeText = resumeText.replace(/\s+/g, ' ').replace(/[\n\r\t]/g, ' ').trim();
 
     if (!resumeText || resumeText.length < 50) {
       throw new Error('Could not extract meaningful text from this file. Is it a scanned image?');
     }
 
-    // Extract skills from actual resume content
     const extractedSkills = extractSkillsFromText(resumeText, originalName);
-
-    // Compute ATS score based on actual content
     const atsResult = computeRealATSScore(resumeText, extractedSkills, originalName);
-
-    // Generate recommendations matching against all 30 companies
     const recommendations = generateRecommendations(extractedSkills.all_skills);
 
-    // ── SAVE TO SUPABASE ──────────────────────────────
-    // IMPORTANT: If your upload fails, run this in Supabase SQL Editor:
-    // ALTER TABLE users ADD COLUMN resume_text TEXT DEFAULT '';
     const { error: updateError } = await supabase.from('users').update({
       skills: extractedSkills.all_skills,
       ats_score: atsResult.total_score,
       ats_breakdown: atsResult.breakdown,
-      // resume_text: resumeText.slice(0, 5000), // Uncomment after running the SQL command above!
+      resume_text: resumeText.slice(0, 10000), // Enabled resume text storage
       updated_at: new Date().toISOString()
     }).eq('id', req.user.id);
 
     if (updateError) {
       console.error('Supabase update error:', updateError.message);
+      // We don't throw here to still return the results to user, but we log it
     } else {
       console.log(`✅ Saved to Supabase: user ${req.user.id} | skills: ${extractedSkills.all_skills.length} | ATS: ${atsResult.total_score}`);
     }
-
-    fs.unlink(filePath, () => { });
 
     res.json({
       success: true,
@@ -110,9 +84,6 @@ router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
 
   } catch (err) {
     console.error('Resume analyze error:', err.message);
-    if (filePath && fs.existsSync(filePath)) {
-      try { fs.unlinkSync(filePath); } catch (e) { }
-    }
     res.status(err.status || 500).json({
       success: false,
       message: 'Analysis failed: ' + (err.message || 'Unknown server error')
