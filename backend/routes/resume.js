@@ -20,6 +20,7 @@ const upload = multer({
 });
 
 const pdf = require('pdf-parse');
+const mammoth = require('mammoth');
 
 // ── POST /api/resume/analyze ───────────────────────────
 router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
@@ -32,6 +33,8 @@ router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
     const fileBuffer = req.file.buffer;
     const ext = path.extname(originalName).toLowerCase();
 
+    console.log(`[RESUME] Analyzing: ${originalName} (${ext})`);
+
     if (ext === '.txt') {
       resumeText = fileBuffer.toString('utf8');
     } else if (ext === '.pdf') {
@@ -42,14 +45,23 @@ router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
         console.error('PDF parsing error:', e.message);
         resumeText = fileBuffer.toString('utf8', 0, fileBuffer.length).replace(/[^\x20-\x7E\n\r\t]/g, ' ');
       }
+    } else if (ext === '.docx') {
+      try {
+        const result = await mammoth.extractRawText({ buffer: fileBuffer });
+        resumeText = result.value;
+      } catch (e) {
+        console.error('DOCX parsing error:', e.message);
+        resumeText = fileBuffer.toString('utf8', 0, fileBuffer.length).replace(/[^\x20-\x7E\n\r\t]/g, ' ');
+      }
     } else {
       resumeText = fileBuffer.toString('utf8', 0, fileBuffer.length).replace(/[^\x20-\x7E\n\r\t]/g, ' ');
     }
 
-    resumeText = resumeText.replace(/\s+/g, ' ').replace(/[\n\r\t]/g, ' ').trim();
+    // Clean up and normalize
+    resumeText = resumeText.replace(/\s+/g, ' ').trim();
 
-    if (!resumeText || resumeText.length < 50) {
-      throw new Error('Could not extract meaningful text from this file. Is it a scanned image?');
+    if (!resumeText || resumeText.length < 20) { // Lowered threshold slightly for testing
+      throw new Error('Could not extract meaningful text from this file. Please ensure it is not an image and contains text.');
     }
 
     const extractedSkills = extractSkillsFromText(resumeText, originalName);
