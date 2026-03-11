@@ -42,19 +42,31 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(`[AUTH] Login attempt: ${email}`);
     if (!email || !password) return res.status(400).json({ success: false, message: 'Email and password required' });
 
     const { data: user, error } = await supabase.from('users').select('*').eq('email', email.toLowerCase().trim()).maybeSingle();
-    if (error) throw error;
-    if (!user) return res.status(401).json({ success: false, message: 'No account with this email. Please register.' });
+    if (error) {
+      console.error('[AUTH] Supabase error:', error.message);
+      throw error;
+    }
+    if (!user) {
+      console.warn(`[AUTH] User not found: ${email}`);
+      return res.status(401).json({ success: false, message: 'No account with this email. Please register.' });
+    }
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ success: false, message: 'Wrong password. Please try again.' });
+    if (!match) {
+      console.warn(`[AUTH] Wrong password for: ${email}`);
+      return res.status(401).json({ success: false, message: 'Wrong password. Please try again.' });
+    }
 
     const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, SECRET, { expiresIn: '7d' });
     const { password: _, ...safeUser } = user;
+    console.log(`[AUTH] Login successful: ${email} (${user.id})`);
     res.json({ success: true, token, user: safeUser });
   } catch (err) {
+    console.error('[AUTH] Catch-all error:', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 });
