@@ -40,5 +40,5 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`\n🚀 InternAI v5.0 → http://localhost:${PORT}`);
-  console.log(`   ✅ 30 companies | Real ATS scoring | Profile page\n`);
+  console.log(`   ✅ Top companies | Real ATS scoring | Profile page\n`);
 });

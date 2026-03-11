@@ -15,7 +15,7 @@ function getToken() { return localStorage.getItem('intern_token'); }
 function setToken(t) { localStorage.setItem('intern_token', t); }
 function getUser() { return JSON.parse(localStorage.getItem('intern_user') || 'null'); }
 function setUser(u) { localStorage.setItem('intern_user', JSON.stringify(u)); }
-function logout() { localStorage.removeItem('intern_token'); localStorage.removeItem('intern_user'); window.location.href = '/pages/login.html'; }
+function logout() { localStorage.removeItem('intern_token'); localStorage.removeItem('intern_user'); window.location.href = 'login.html'; }
 
 async function apiFetch(path, opts = {}) {
   const token = getToken();

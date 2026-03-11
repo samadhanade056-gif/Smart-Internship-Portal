@@ -60,9 +60,11 @@ router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
     // Clean up and normalize
     resumeText = resumeText.replace(/\s+/g, ' ').trim();
 
-    if (!resumeText || resumeText.length < 20) { // Lowered threshold slightly for testing
-      throw new Error('Could not extract meaningful text from this file. Please ensure it is not an image and contains text.');
+    if (!resumeText || resumeText.length < 10) { 
+      throw new Error('Could not extract text from this file. Please ensure it is a digital PDF or Word document (not a scanned image).');
     }
+
+    console.log(`[RESUME] Extracted ${resumeText.length} characters.`);
 
     const extractedSkills = extractSkillsFromText(resumeText, originalName);
     const atsResult = computeRealATSScore(resumeText, extractedSkills, originalName);
