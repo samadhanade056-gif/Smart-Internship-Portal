@@ -510,13 +510,10 @@
       if (!curr || !next) return InternAI.showToast('Please fill all fields', 'error');
       btn.disabled = true; btn.textContent = 'Updating...';
       try {
-        const res = await fetch(API + '/auth/password', {
+        const data = await InternAI.apiFetch('/auth/password', {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('intern_token')}` },
           body: JSON.stringify({ currentPassword: curr, newPassword: next })
         });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message);
         InternAI.showToast('Password updated! 🔒');
         document.getElementById('currPwd').value = '';
         document.getElementById('newPwd').value = '';
@@ -525,14 +522,11 @@
     }
 
     async function loadProfile() {
-      const token = localStorage.getItem('intern_token');
       try {
-        const [meRes, appRes] = await Promise.all([
-          fetch(API + '/auth/me', { headers: { Authorization: `Bearer ${token}` } }),
-          fetch(API + '/internships/applied/list', { headers: { Authorization: `Bearer ${token}` } })
+        const [meData, appData] = await Promise.all([
+          InternAI.apiFetch('/auth/me'),
+          InternAI.apiFetch('/internships/applied/list')
         ]);
-        const meData = await meRes.json();
-        const appData = await appRes.json();
         const u = meData.user || {};
         const apps = appData.applications || [];
 
@@ -602,14 +596,12 @@
     }
 
     async function saveProfile() {
-      const token = localStorage.getItem('intern_token');
       const btn = document.getElementById('saveBtn');
       const msg = document.getElementById('saveMsg');
       btn.disabled = true; btn.textContent = 'Saving...';
       try {
-        const res = await fetch(API + '/auth/profile', {
+        const data = await InternAI.apiFetch('/auth/profile', {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({
             name: document.getElementById('iName').value,
             college: document.getElementById('iCollege').value,
@@ -620,8 +612,6 @@
             bio: document.getElementById('iBio').value
           })
         });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message);
         // Update display
         document.getElementById('profileName').textContent = document.getElementById('iName').value;
         document.getElementById('userName').textContent = document.getElementById('iName').value.split(' ')[0];

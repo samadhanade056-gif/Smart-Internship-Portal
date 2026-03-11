@@ -42,11 +42,17 @@ async function apiFetch(path, opts = {}) {
     let data;
     
     if (contentType && contentType.includes('application/json')) {
-      data = await res.json();
+      const text = await res.text();
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        console.error('JSON Parse Error. Body:', text.slice(0, 300));
+        throw new Error(`Server returned invalid JSON. Message starts with: "${text.slice(0, 50)}..."`);
+      }
     } else {
       const text = await res.text();
       console.error('Non-JSON response:', text.slice(0, 300));
-      throw new Error(`Server returned an invalid response (not JSON). ${res.status === 500 ? 'This is likely a server crash.' : 'Status: ' + res.status}`);
+      throw new Error(`Server returned a ${res.status} error. Use the dashboard to check for details.`);
     }
 
     if (!res.ok) throw new Error(data.message || `Request failed (HTTP ${res.status})`);
@@ -313,4 +319,4 @@ async function loadInternships(filters = {}) {
   } catch (err) { grid.innerHTML = `<p style="color:#ef4444;text-align:center;padding:40px">${err.message}</p>`; }
 }
 
-window.InternAI = { showToast, logout, uploadResume, handleLogin, demoLogin, handleRegister, loadDashboard, loadInternships, initUploadZone, renderInternCard, openModal, closeModal, applyNow };
+window.InternAI = { apiFetch, showToast, logout, uploadResume, handleLogin, demoLogin, handleRegister, loadDashboard, loadInternships, initUploadZone, renderInternCard, openModal, closeModal, applyNow };

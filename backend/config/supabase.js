@@ -16,12 +16,22 @@ try {
     console.log('✅ Supabase connected!');
   } else {
     // Return a dummy object that logs errors when called
+    const dummyQuery = {
+      select: () => dummyQuery,
+      update: () => dummyQuery,
+      insert: () => dummyQuery,
+      delete: () => dummyQuery,
+      eq: () => dummyQuery,
+      ilike: () => dummyQuery,
+      or: () => dummyQuery,
+      order: () => dummyQuery,
+      limit: () => dummyQuery,
+      single: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+      maybeSingle: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+      then: (resolve) => resolve({ data: [], error: { message: 'Supabase not configured' } })
+    };
     supabase = {
-      from: (table) => ({
-        select: () => ({ eq: () => ({ maybeSingle: () => Promise.resolve({ error: { message: 'Supabase not configured. Set environment variables on Vercel.' } }), single: () => Promise.resolve({ error: { message: 'Supabase not configured' } }), insert: () => Promise.resolve({ error: { message: 'Supabase not configured' } }) }), insert: () => Promise.resolve({ error: { message: 'Supabase not configured' } }) }),
-        update: () => ({ eq: () => Promise.resolve({ error: { message: 'Supabase not configured' } }) }),
-        insert: () => ({ select: () => ({ single: () => Promise.resolve({ error: { message: 'Supabase not configured' } }) }) })
-      })
+      from: () => dummyQuery
     };
   }
 } catch (err) {

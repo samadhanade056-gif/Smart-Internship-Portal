@@ -103,9 +103,7 @@
       const grid = document.getElementById('allInternshipsGrid');
       grid.innerHTML = '<div class="spinner" style="margin:60px auto"></div>';
       try {
-        const API = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api';
-        const res = await fetch(API + '/internships', { headers: { Authorization: `Bearer ${localStorage.getItem('intern_token')}` } });
-        const data = await res.json();
+        const data = await InternAI.apiFetch('/internships');
         allInternships = data.internships || [];
         renderGrid(allInternships);
       } catch (err) { grid.innerHTML = `<p style="color:#ef4444;text-align:center;padding:60px">${err.message}</p>`; }
