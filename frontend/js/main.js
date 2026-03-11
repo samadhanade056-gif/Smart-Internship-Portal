@@ -26,13 +26,16 @@ async function apiFetch(path, opts = {}) {
   }
   
   try {
+    const isFormData = opts.body instanceof FormData;
+    const headers = { 
+      ...(token ? { Authorization: `Bearer ${token}` } : {}), 
+      ...(opts.headers || {}) 
+    };
+    if (!isFormData) headers['Content-Type'] = 'application/json';
+
     const res = await fetch(API_BASE + path, {
-      headers: { 
-        'Content-Type': 'application/json', 
-        ...(token ? { Authorization: `Bearer ${token}` } : {}), 
-        ...(opts.headers || {}) 
-      },
-      ...opts
+      ...opts,
+      headers
     });
     
     const contentType = res.headers.get('content-type');
@@ -42,8 +45,8 @@ async function apiFetch(path, opts = {}) {
       data = await res.json();
     } else {
       const text = await res.text();
-      console.error('Non-JSON response:', text.slice(0, 200));
-      throw new Error(`Server returned an invalid response. ${res.status === 500 ? 'Internal Server Error' : 'Status: ' + res.status}`);
+      console.error('Non-JSON response:', text.slice(0, 300));
+      throw new Error(`Server returned an invalid response (not JSON). ${res.status === 500 ? 'This is likely a server crash.' : 'Status: ' + res.status}`);
     }
 
     if (!res.ok) throw new Error(data.message || `Request failed (HTTP ${res.status})`);
@@ -98,21 +101,13 @@ function initUploadZone(zoneId, inputId, onFile) {
 async function uploadResume(file) {
   const zone = document.getElementById('uploadZone');
   if (!zone) return;
-  const token = getToken();
-  if (!token) { zone.innerHTML = `<div class="upload-icon" style="background:rgba(239,68,68,.1)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01M12 3l9 16H3L12 3z" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Not logged in</h3><p>Please login to upload.</p><a href="/pages/login.html" style="display:inline-block;margin-top:12px;padding:10px 24px;background:#10b981;color:#fff;border-radius:8px;font-weight:600;">Login Now</a>`; showToast('Please login first!', 'error'); return; }
+  if (!getToken()) { zone.innerHTML = `<div class="upload-icon" style="background:rgba(239,68,68,.1)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01M12 3l9 16H3L12 3z" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Not logged in</h3><p>Please login to upload.</p><a href="/pages/login.html" style="display:inline-block;margin-top:12px;padding:10px 24px;background:#10b981;color:#fff;border-radius:8px;font-weight:600;">Login Now</a>`; showToast('Please login first!', 'error'); return; }
+  
   zone.innerHTML = `<div class="spinner"></div><p style="margin-top:16px;color:#8fa3c0">Reading your resume with AI...</p>`;
   try {
     const fd = new FormData(); fd.append('resume', file);
-    const res = await fetch(API_BASE + '/resume/analyze', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd });
-    let data;
-    try {
-      data = await res.json();
-    } catch (e) {
-      throw new Error('Server returned an invalid response (not JSON). ' + (res.status === 500 ? 'This is likely a server crash.' : 'Status: ' + res.status));
-    }
-
-    if (res.status === 401) { localStorage.clear(); zone.innerHTML = `<h3>Session expired</h3><a href="/pages/login.html" style="color:#10b981">Login again</a>`; return; }
-    if (!res.ok) throw new Error(data.message || 'Analysis failed (HTTP ' + res.status + ')');
+    const data = await apiFetch('/resume/analyze', { method: 'POST', body: fd });
+    
     zone.innerHTML = `<div class="upload-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#10b981" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="#10b981" stroke-width="1.5"/></svg></div><h3>✅ ${file.name}</h3><p style="color:#34d399;font-weight:600">${data.skills?.total_skills_found || 0} skills found · ATS Score: <strong>${data.ats_score?.total_score || 0}/100</strong></p>`;
     showToast(`Resume analyzed! ${data.skills?.total_skills_found || 0} skills found 🎉`);
     renderResults(data);
