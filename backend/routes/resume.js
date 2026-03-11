@@ -24,87 +24,95 @@ const mammoth = require('mammoth');
 
 // ── POST /api/resume/analyze ───────────────────────────
 router.post('/analyze', authMW, upload.single('resume'), async (req, res) => {
-  if (!req.file) return res.status(400).json({ success: false, message: 'No file uploaded' });
-
-  const originalName = req.file.originalname;
-  let resumeText = '';
-
   try {
+    if (!req.file) {
+      console.error('[RESUME] No file uploaded in request');
+      return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+
+    const originalName = req.file.originalname;
     const fileBuffer = req.file.buffer;
     const ext = path.extname(originalName).toLowerCase();
+    let resumeText = '';
 
-    console.log(`[RESUME] Analyzing: ${originalName} (${ext})`);
+    console.log(`\n[RESUME_START] Processing: ${originalName} | Size: ${req.file.size} bytes`);
+
+    if (!fileBuffer || fileBuffer.length === 0) {
+      throw new Error('File buffer is empty or corrupted.');
+    }
 
     if (ext === '.txt') {
       resumeText = fileBuffer.toString('utf8');
     } else if (ext === '.pdf') {
       try {
         const data = await pdf(fileBuffer);
-        resumeText = data.text;
+        resumeText = data.text || '';
       } catch (e) {
-        console.error('PDF parsing error:', e.message);
-        resumeText = fileBuffer.toString('utf8', 0, fileBuffer.length).replace(/[^\x20-\x7E\n\r\t]/g, ' ');
+        console.warn('[RESUME] PDF parse failed, trying fallback:', e.message);
+        resumeText = fileBuffer.toString('utf8', 0, 10000).replace(/[^\x20-\x7E\n\r\t]/g, ' ');
       }
     } else if (ext === '.docx') {
       try {
         const result = await mammoth.extractRawText({ buffer: fileBuffer });
-        resumeText = result.value;
+        resumeText = result.value || '';
       } catch (e) {
-        console.error('DOCX parsing error:', e.message);
-        resumeText = fileBuffer.toString('utf8', 0, fileBuffer.length).replace(/[^\x20-\x7E\n\r\t]/g, ' ');
+        console.warn('[RESUME] DOCX parse failed, trying fallback:', e.message);
+        resumeText = fileBuffer.toString('utf8', 0, 10000).replace(/[^\x20-\x7E\n\r\t]/g, ' ');
       }
     } else {
-      resumeText = fileBuffer.toString('utf8', 0, fileBuffer.length).replace(/[^\x20-\x7E\n\r\t]/g, ' ');
+      resumeText = fileBuffer.toString('utf8', 0, 10000).replace(/[^\x20-\x7E\n\r\t]/g, ' ');
     }
 
     // Clean up and normalize
-    resumeText = resumeText.replace(/\s+/g, ' ').trim();
+    resumeText = (resumeText || '').replace(/\s+/g, ' ').trim();
 
-    if (!resumeText || resumeText.length < 10) { 
-      throw new Error('Could not extract text from this file. Please ensure it is a digital PDF or Word document (not a scanned image).');
+    if (!resumeText || resumeText.length < 5) { 
+      throw new Error('The file content appears to be empty or unreadable. Please upload a digital document.');
     }
 
-    console.log(`[RESUME] Extracted ${resumeText.length} characters.`);
+    console.log(`[RESUME_TEXT] Extracted ${resumeText.length} characters.`);
 
     const extractedSkills = extractSkillsFromText(resumeText, originalName);
     const atsResult = computeRealATSScore(resumeText, extractedSkills, originalName);
-    const recommendations = generateRecommendations(extractedSkills.all_skills);
+    const recommendations = generateRecommendations(extractedSkills.all_skills || []);
 
-    // ── SAVE TO SUPABASE ──────────────────────────────
+    // ── SAVE TO SUPABASE (Fire and forget, but await for success log) ──
     if (supabase && typeof supabase.from === 'function') {
-      const { error: updateError } = await supabase.from('users').update({
-        skills: extractedSkills.all_skills,
-        ats_score: atsResult.total_score,
-        ats_breakdown: atsResult.breakdown,
-        resume_text: resumeText.slice(0, 10000),
-        updated_at: new Date().toISOString()
-      }).eq('id', req.user.id);
+      try {
+        const { error: updateError } = await supabase.from('users').update({
+          skills: extractedSkills.all_skills || [],
+          ats_score: atsResult.total_score || 0,
+          ats_breakdown: atsResult.breakdown || {},
+          resume_text: resumeText.slice(0, 5000), // Shorter slice for DB safety
+          updated_at: new Date().toISOString()
+        }).eq('id', req.user.id);
 
-      if (updateError) {
-        console.error('Supabase update error:', updateError.message);
-      } else {
-        console.log(`✅ Saved to Supabase: user ${req.user.id} | skills: ${extractedSkills.all_skills.length} | ATS: ${atsResult.total_score}`);
+        if (updateError) console.error('[RESUME_DB] Supabase error:', updateError.message);
+        else console.log(`[RESUME_DB] Success for ${req.user.id} | Score: ${atsResult.total_score}`);
+      } catch (dbErr) {
+        console.error('[RESUME_DB] Sync failed:', dbErr.message);
       }
-    } else {
-      console.warn('⚠️ Supabase client not initialized properly, results not saved to DB.');
     }
 
-    res.json({
+    console.log(`[RESUME_DONE] ${originalName} analyzed successfully. Result: ${atsResult.total_score}/100`);
+
+    return res.json({
       success: true,
-      message: `Found ${extractedSkills.all_skills.length} skills! ATS Score: ${atsResult.total_score}/100`,
+      message: `Analysis Complete! ATS Score: ${atsResult.total_score}/100`,
       skills: extractedSkills,
       ats_score: atsResult,
-      contact: extractedSkills.contact,
-      education: extractedSkills.education,
-      experience: extractedSkills.experience,
+      contact: extractedSkills.contact || {},
+      education: extractedSkills.education || {},
+      experience: extractedSkills.experience || {},
       recommendations
     });
 
   } catch (err) {
-    console.error('Resume analyze error:', err.message);
-    res.status(err.status || 500).json({
+    console.error('[RESUME_FATAL]', err);
+    return res.status(500).json({
       success: false,
-      message: 'Analysis failed: ' + (err.message || 'Unknown server error')
+      message: 'Server Error: ' + (err.message || 'Unknown processing error'),
+      action: 'Please try a different file format (PDF is recommended).'
     });
   }
 });
