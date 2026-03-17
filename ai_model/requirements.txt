@@ -23,8 +23,9 @@ numpy==1.26.4               # Numerical operations
 pandas==2.2.1               # Data manipulation
 
 # ── Semantic Matching (Sentence-BERT) ─────────────────────────────
-sentence-transformers==2.7.0  # all-MiniLM-L6-v2 for semantic skill matching
-torch==2.2.2                  # PyTorch backend for sentence-transformers
+# Sentence-BERT and PyTorch dependencies temporarily disabled for fast installation
+# sentence-transformers==2.7.0  # all-MiniLM-L6-v2 for semantic skill matching
+# torch==2.2.2                  # PyTorch backend for sentence-transformers
 
 # ── API Server (Flask bridge to Node.js backend) ──────────────────
 flask==3.0.3

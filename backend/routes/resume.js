@@ -88,17 +88,36 @@ router.post('/analyze', authMW, (req, res, next) => {
     if (resumeText.length < 5) resumeText = "Resume content: " + originalName;
 
     // 2. RUN ANALYSIS
-    const extractedSkills = extractSkillsLocally(resumeText, originalName);
-    const atsResult = computeATSLocally(resumeText, extractedSkills);
+    const axios = require('axios');
+    const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://127.0.0.1:8000';
+    
+    let aiResult;
+    try {
+      const aiResponse = await axios.post(`${aiServiceUrl}/api/analyze`, { text: resumeText });
+      aiResult = aiResponse.data;
+    } catch (aiErr) {
+      console.warn('[AI_FALLBACK] Python model failed, using JS fallback.', aiErr.message);
+      
+      const extractedSkillsLocally = extractSkillsLocally(resumeText, originalName);
+      const atsResultLocally = computeATSLocally(resumeText, extractedSkillsLocally);
+      aiResult = {
+        skills: extractedSkillsLocally,
+        ats_score: atsResultLocally
+      };
+    }
+    
+    const extractedSkills = aiResult.skills || { all_skills: [] };
+    const atsResult = aiResult.ats_score || { total_score: 0, breakdown: {} };
+    
     const internships = getInternships();
-    const recommendations = matchInternships(extractedSkills.all_skills, internships);
+    const recommendations = matchInternships(extractedSkills.all_skills || [], internships);
 
     // 3. ATTEMPT SAVE (Non-blocking)
-    if (supabase) {
+    if (supabase && req.user && req.user.id) {
       supabase.from('users').update({
-        skills: extractedSkills.all_skills,
-        ats_score: atsResult.total_score,
-        ats_breakdown: atsResult.breakdown,
+        skills: extractedSkills.all_skills || [],
+        ats_score: atsResult.total_score || 0,
+        ats_breakdown: atsResult.breakdown || {},
         updated_at: new Date().toISOString()
       }).eq('id', req.user.id).then(({ error }) => {
         if (error) console.error('[DB_SYNC_ERR]', error.message);
@@ -111,7 +130,11 @@ router.post('/analyze', authMW, (req, res, next) => {
       message: 'Analysis successful!',
       skills: extractedSkills,
       ats_score: atsResult,
-      recommendations
+      recommendations,
+      entities: aiResult.entities,
+      education: aiResult.education,
+      experience: aiResult.experience,
+      contact: aiResult.contact
     });
 
   } catch (err) {
