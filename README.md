@@ -15,7 +15,7 @@
 
 ## 📸 Features
 
-| Feature | Description |
+| Feature | Description 
 |---|---|
 | 🧠 AI Resume Parser | Upload PDF/DOCX — NLP extracts 200+ skills |
 | 🎯 Smart Matching | Cosine similarity ranks internships by fit % |
