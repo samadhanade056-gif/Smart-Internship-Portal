@@ -10,29 +10,28 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
 
 let supabase;
 try {
-  // If keys are missing, createClient might throw. We want the app to start but log clearly.
   if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
     supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
     console.log('✅ Supabase connected!');
   } else {
-    // Return a dummy object that returns null data instead of errors
-    // This allows the app to stay in "Demo Mode" without crashing or showing error toasts
-    const dummyQuery = {
-      select: () => dummyQuery,
-      update: () => dummyQuery,
-      insert: () => dummyQuery,
-      delete: () => dummyQuery,
-      eq: () => dummyQuery,
-      ilike: () => dummyQuery,
-      or: () => dummyQuery,
-      order: () => dummyQuery,
-      limit: () => dummyQuery,
+    // Return a dummy promise-like query builder that supports await
+    const dummyPromise = Promise.resolve({ data: [], error: null });
+    Object.assign(dummyPromise, {
+      select: () => dummyPromise,
+      update: () => dummyPromise,
+      insert: () => dummyPromise,
+      delete: () => dummyPromise,
+      eq: () => dummyPromise,
+      ilike: () => dummyPromise,
+      or: () => dummyPromise,
+      order: () => dummyPromise,
+      limit: () => dummyPromise,
       single: () => Promise.resolve({ data: null, error: null }),
-      maybeSingle: () => Promise.resolve({ data: null, error: null }),
-      then: (resolve) => resolve({ data: [], error: null })
-    };
+      maybeSingle: () => Promise.resolve({ data: null, error: null })
+    });
+    
     supabase = {
-      from: () => dummyQuery
+      from: () => dummyPromise
     };
     console.log('⚠️ Supabase not configured - Running in Demo/Safe mode.');
   }
